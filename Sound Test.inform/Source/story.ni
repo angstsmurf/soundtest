@@ -6,17 +6,21 @@ Include Glulx Entry Points by Emily Short.
 
 Use direct event handling.
 
+Sound of AIFF is the file "wind.aiff".
+Sound of MOD is the file "stranger_-_run.mod".
+Sound of OGG is the file "Cool-Adventure-Intro.ogg".
+
+The Sound Stage is a room.
+
+Volume 1 - Components of the sound channel kind
+
 [The sound channel kind is a proxy for real, Glk level sound channels. When the story begins only two Glk channels are created, the "built-in" foreground channel and background channel, which are assigned as sound channels with index 1 and 2 respectively.]
 
 A sound channel is a kind of thing. There are 100 sound channels.
 
 The current sound channel is a sound channel that varies.
 
-Sound of AIFF is the file "wind.aiff".
-Sound of MOD is the file "stranger_-_run.mod".
-Sound of OGG is the file "Cool-Adventure-Intro.ogg".
-
-[The Table of Sound-Channels is a way to simplify keeping track of all the sound channels. The index of a sound channel always corresponds to its row in this table.]
+[The Table of Sound-Channels is a way to simplify keeping track of all sound channels. The index of a sound channel always corresponds to its row in this table.]
 
 Table of Sound-Channels
 chan (a sound channel)
@@ -26,122 +30,11 @@ with 100 blank rows
 
 The current channel id is a number that varies. The current channel id variable translates into I6 as "current_channel".
 
-[The two global variables below are used to keep track of channels included ina a glk_schannel_play_multi() command.]
-Multinotification is a number that varies. Multinotification is initially 101.
-
-Multiplay channels remaining is a number that varies. Multiplay channels remaining is initially 0.
-
 Include (-
 
 Global current_channel = 1;
 
-Array multi_chanarray --> 100;
-Array multi_soundarray --> 100;
-
 -) after "Definitions.i6t".
-
-The Sound Stage is a room.
-
-The description of the Sound Stage is "This is a mixer room with lots of buttons and controls. Most prominent is a large PLAY button, accompanied by the usual PAUSE and STOP buttons, and a volume control. There is also a switch for sound type (set to play [sound-type-name of the channel-sound of current sound channel]), and another one to change the sound channel, currently set to [index of current sound channel].[paragraph break]Furthermore you notice a DESTROY button, a HINT button, [if simplify button is in location]a SIMPLIFY button, a PLAY MULTI button and a volume change delay control[otherwise]and a COMPLICATE button[end if]."
-
-The large display is fixed in place in Sound Stage. The initial appearance of the large display is "There is also a large display here reading: 'Open sound channels: [open-channels-list]. Currently playing: [playing-channels-list]'.[if multiplay channels remaining is greater than 1] (Channels that are part of a multichannel play command will be listed even if they have finished.)"
-
-To say open-channels-list:
-	if there is a sound channel which is not uncreated:
-		let L be a list of sound channels;
-		repeat through Table of Sound-Channels:
-			unless chan entry is uncreated:
-				add chan entry to L;
-		say "[L]";
-	otherwise:
-		say "none".
-
-To say playing-channels-list:
-	if there is a sound channel which is playing:
-		let L be a list of sound channels;
-		repeat through Table of Sound-Channels:
-			if chan entry is playing:
-				add chan entry to L;
-		say "[L]";
-	otherwise:
-		say "none".
-
-First when play begins:
-	say "Welcome to the Sound Test![paragraph break]The Ogg Vorbis file included in this test is 'Cool Adventure Intro' by Eric Matyas. See www.soundimage.org[line break]The MOD file is 'Run' by Stranger. See modarchive.org[line break]The AIFF file is taken from the Glulx test game 'Sensory Jam' by Andrew Plotkin. See eblong.com/zarf/glulx/[paragraph break]".
-
-When play begins:
-	unless glulx sound is supported:
-		say "This interpreter is unable to play sounds, so nothing in this test suite will work. You can type yes to go ahead and run it anyway, but it is not recommended.[paragraph break]>> ";
-		unless the player consents:
-			end the story abruptly;
-	otherwise:
-		unless glulx sounds are fully supported:
-			say "A hollow voice says: 'This interpreter only has basic sound support.' The PLAY MULTI button and the volume change delay control disappear in a puff of smoke. [bracket]You can reinstate them with the COMPLICATE button, but they probably won't work.[close bracket]";
-	let N be 1;
-	let R be -1 + the rock of channel id (foreground channel id);
-	repeat with S running through sound channels:
-		choose row N from the Table of Sound-Channels;
-		now the chan entry is S;
-		now the index of S is N;
-		now the notification of S is N;
-		now the rock of S is R + N;
-		increment N;
-	now current sound channel is chan in row 1 of the Table of Sound-Channels;
-	now current channel id is foreground channel id;
-	now channel id of current sound channel is current channel id;
-	[say "Set channel 1 (and current sound channel) to foreground channel, id [channel id of current sound channel] and rock [rock of channel id (foreground channel id)].";]
-	let BGC be chan in row 2 of the Table of Sound-Channels;
-	now the channel id of BGC is background channel id;
-	[say "Set channel 2 to background channel, id [background channel id] and rock [rock of channel id (background channel id)].";]
-	recover sound channels.
-
-[A hack to always run some code after a successful restore]
-restore the game rule response (B) is "[post-restore routine]";
-
- To say post-restore routine:
- 	say "Ok. ";
-	recover sound channels;
-	recreate sound channels.
-
-To recover sound channels:
-	let C be the channel following 0;
-	while C is not 0:
-		[say "Found a channel with id [C] and rock [rock of channel id C].";]
-		repeat with C2 running through sound channels:
-			if rock of C2 is rock of channel id C:
-				now channel id of C2 is C;
-				[say "Added it at index [index of C2].";]
-				now C2 is stopped;
-		now C is the channel following C;
-
-To recreate sound channels:
-	repeat with C running through sound channels which are not uncreated:
-		let found be false;
-		let C2 be the channel following 0;
-		while C2 is not 0:
-			if rock of C is rock of channel id C2:
-				now found is true;
-			now C2 is the channel following C2;
-		if found is false:
-			now channel id of C is new channel with rock (rock of C);
-			[say "Created a new channel at index [index of C] with id [channel id of C] and rock [rock of C].";]
-
-To end the story abruptly:
-	(- VM_KeyChar(); quit; -)
-
-To decide which number is foreground channel id:
-	(- gg_foregroundchan -).
-
-To decide which number is background channel id:
-	(- gg_backgroundchan -).
-
-To decide which number is the rock of channel id (N - a number):
-	(- glk_schannel_get_rock({N}) -).
-
-To decide which number is the channel following (N - a number):
-	(- glk_schannel_iterate({N}, 0) -).
-
-Chapter 1 - Components of the channel kind
 
 A sound channel has a number called the channel id. The channel id of a sound channel is usually 0.
 
@@ -159,34 +52,44 @@ A sound channel has a number called notification. The notification of a sound ch
 
 A sound channel has a sound name called channel-sound. The channel-sound of a sound channel is usually sound of AIFF.
 
-A sound channel has a number called multiplay index. The multiplay index of a sound channel is usually 0.
+A sound channel has a truth state called multiplay state. The multiplay state of a sound channel is usually false.
 
 A sound channel can be uncreated, stopped, playing or paused. A sound channel is usually uncreated.
 
-The description of a sound channel is "Sound channel [index of the item described] is set to play [sound-type-name of the channel-sound of the item described] at volume [the volume of the item described] with [repeats of the item described] repeat[s] and notification number [notification of the item described]."
+The description of a sound channel is "Sound channel [index of the item described] [if the item described is uncreated]has not been created yet. You can create a sound channel simply by setting the channel switch to its number[otherwise]is set to play [sound-type-name of the channel-sound of the item described] at volume [the volume of the item described] with [repeats of the item described] repeat[s] and notification number [notification of the item described]. It is currently [status of the item described][end if][if the multiplay state of the item described is true]. This channel seems to be part of a play multi command[end if]."
 
 To say sound-type-name of (N – a sound name):
 	if N is:
 		-- sound of AIFF:
-			say "aiff";
+			say "AIFF";
 		-- sound of MOD:
-			say "mod";
+			say "MOD";
 		-- sound of OGG:
-			say "ogg".
+			say "OGG".
 
-Chapter 2 - Interactive parts
+To say status of (C – a sound channel):
+	if C is uncreated:
+		say "uncreated";
+	otherwise if C is playing:
+		say "playing";
+	otherwise if C is stopped:
+		say "stopped";
+	otherwise if C is paused:
+		say "paused".
 
-Section 1 - Numeric sliders
+Volume 2 - Interactive parts
+
+Book 1 - Numeric sliders
 
 The channel knob is scenery in Sound Stage. The description is  "A turning control with which to set the number of the current channel. It can be set to any integer between 1 and 100. It is currently set to [index of current sound channel]."
 
-Understand "sound channel" and "sound/-- channel control" as the channel knob.
+Understand "sound channel" and "sound/-- channel control/switch/knob" as the channel knob.
 
 The volume slider is scenery in Sound Stage. The description is "A slide control with which to adjust the volume of the current channel. It is numbered from 0 to 65535. Currently it is set to [the volume of current sound channel]."
 
 Understand "volume control/level" as the volume slider.
 
-The fade delay slider is scenery in Sound Stage. The description is "A slide control with which to adjust the duration of a volume change. It is currently set to [volume change delay of current sound channel]."
+The fade delay slider is scenery in Sound Stage. The description is "A slide control with which to adjust the duration (in milliseconds) of a volume change. It is currently set to [volume change delay of current sound channel]."
 
 Understand "fade/fader delay/-- slider/control/--"  or "volume change/-- delay" as the fade delay slider.
 
@@ -200,9 +103,11 @@ Understand "notification/notify/notifications knob/control/switch/-- " as the no
 
 The type switch is scenery in Sound Stage. The description is "A turning control with which to change the sound played. It can be set to AIFF, MOD or OGG. It is currently set to [sound-type-name of channel-sound of current sound channel]."
 
+The printed name of the type switch is "sound type switch".
+
 Understand "sound type/--" as the type switch.
 
-Section 2 - Buttons
+Book 2 - Buttons
 
 The play button is scenery in Sound Stage. The description is "This button will start playback of the current channel."
 
@@ -236,7 +141,7 @@ The simplify button is scenery in Sound Stage. The description is "This button w
 Instead of pushing the simplify button:
 	try simplifying.
 
-The complicate button is scenery in Sound Stage. The description is "This button will switch to complete sound functionality."
+The complicate button is scenery. The description is "This button will switch to complete sound functionality."
 
 Instead of pushing the complicate button:
 	try complicating.
@@ -246,89 +151,76 @@ The hint button is scenery in Sound Stage. The description is "This button will 
 Instead of pushing the hint button:
 	try hinting.
 
-Chapter 3 - I6 glue
+The play simple button is scenery in Sound Stage. The description is "This button starts playing the current channel using glk_schannel_play rather than glk_schannel_play_ext, disregaring any repeats and notification settings. As the command does not support notifications, the channel will keep its 'playing' status even after it has finished."
 
-To play (SFX - sound name) with (R - a number) repeats/repeat and notification (N - a number):
-	(- glk_schannel_play_ext( current_channel, ResourceIDsOfSounds-->{SFX}, {R}, {N}); -).
+Instead of pushing the play simple button:
+	try simple-playing.
 
-To volume-adjust to (N - a number):
-	(- glk_schannel_set_volume(current_channel, {N}); -).
+The stop all button is scenery in Sound Stage. The description is "This button stops all currently playing or paused sound channels immediately. It is a convenience function which has no corresponding Glk command."
 
-To volume-adjust to (X - a number) with a duration of (Y - a number) and notification (N - a number):
-	(- glk_schannel_set_volume_ext(current_channel, {X}, {Y}, {N}); -).
+Instead of pushing the stop all button:
+	try all-stopping.
 
-To stop sound:
-	(- glk_schannel_stop(current_channel); -).
+Volume 4 - Actions
 
-To pause sound:
-	(- glk_schannel_pause(current_channel); -).
-
-To unpause sound:
-	(- glk_schannel_unpause(current_channel); -).
-
-To multiplay sound:
-	let N be 0;
-	let L be a list of sound channels;
-	repeat through Table of Sound-Channels:
-		unless the chan entry is uncreated:
-			add chan entry to L;
-			now multiplay index of chan entry is multinotification;
-			add multisound chan entry at N;
-			increment N;
-	if N is greater than 0:
-		let R be multiplay result with N channels and notify (multinotification);
-		say "Tried to simultaneously start playback on [regarding the number of entries in L]channel[s] [L].";
-		now multiplay channels remaining is R;
-		say "Successfully started playing [R] channel[s].";
-
-To add multisound (S - a sound channel) at (N - a number):
-	(- multi_chanarray --> {N} = {S}.(+ channel id +); multi_soundarray --> {N} = ResourceIDsOfSounds --> {S}.(+ channel-sound +); -).
-
-To decide which number is multiplay result with (C - a number) channels and notify (N - a number):
-	(- glk_schannel_play_multi(multi_chanarray, {C}, multi_soundarray,  {C}, {N}); -).
-
-To decide which number is new channel with rock (R - a number) and volume (V - a number):
-	(-  glk_schannel_create_ext({R}, {V}) -).
-
-To decide which number is new channel with rock (R - a number):
-	(-  glk_schannel_create({R}) -).
-
-To destroy channel (C - a number):
-	(- glk_schannel_destroy({C}); -).
-
-To sound load hint:
-	(- glk_sound_load_hint(ResourceIDsOfSounds-->(+ sound of AIFF +), 1); -).
-
-
-Chapter 4 - Actions
-
-Section 1 - Pushing buttons
+Book 1 - Pushing buttons
 
 Understand "play" as playing. Playing is an action applying to nothing.
 Carry out playing:
-	say "You push the play button. Sound channel [current sound channel] begins to play the [sound-type-name of channel-sound of current sound channel] with [repeats of current sound channel] repetitions and notification number [notification of current sound channel].";
+	say "You push the play button. Sound channel [current sound channel] [if current sound channel is playing]stops playing its previous sound and [end if]begins to play the [sound-type-name of channel-sound of current sound channel] at volume [volume of current sound channel] with [repeats of current sound channel] repetitions and notification number [notification of current sound channel].";
+	if the multiplay state of current sound channel is true:
+		handle multichannel stopped;
+		now multiplay state of current sound channel is false;
 	now the current sound channel is playing;
 	play (channel-sound of current sound channel) with (repeats of current sound channel) repeats and notification (notification of current sound channel).
 
-Understand "multiplay" or "play multi/multiple" or "multi" or "multiple" as multiplaying. Multiplaying is an action applying to nothing.
-Carry out multiplaying:
-	say "You push the multiplay button.";
-	multiplay sound.
+Understand "play simple" or "simple-play" or "simple" as simple-playing. Simple-playing is an action applying to nothing. Carry out simple-playing:
+	say "You push the play simple button. Sound channel [current sound channel] [if current sound channel is playing]stops playing its previous sound and [end if]begins to play the [sound-type-name of channel-sound of current sound channel]. (As the simple play command does not support notifications, this channel will keep its 'playing' status after it has finished.)";
+	if the multiplay state of current sound channel is true:
+		handle multichannel stopped;
+		now multiplay state of current sound channel is false;
+	now the current sound channel is playing;
+	play (channel-sound of current sound channel).
 
 Understand "stop" as stopping. Stopping is an action applying to nothing.
 Carry out stopping:
+	stop sound;
+	if current sound channel is stopped:
+		say "Current sound channel is already stopped.";
+		stop the action;
+	if the multiplay state of current sound channel is true:
+		handle multichannel stopped;
+		now multiplay state of current sound channel is false;
 	say "Channel [current sound channel] stopped.";
-	now the current sound channel is stopped;
-	stop sound.
+	now the current sound channel is stopped.
+
+Understand "stop all" as all-stopping. All-stopping is an action applying to nothing. Carry out all-stopping:
+	stop all channels;
+	if there is a sound channel which is playing or there is a sound channel which is paused:
+		repeat through Table of Sound-Channels:
+			if chan entry is playing or chan entry is paused:
+				now chan entry is stopped;
+				if the multiplay state of chan entry is true:
+					handle multichannel stopped;
+					now multiplay state of chan entry is false;
+				say "Stopped sound channel [chan entry].";
+	otherwise:
+		say "There are no playing or paused sound channels."
 
 Understand "pause" as pausing. Pausing is an action applying to nothing.
 Carry out pausing:
+	if current sound channel is paused:
+		say "Current sound channel is already paused.";
+		stop the action;
 	say "Channel [current sound channel] paused.";
 	now the current sound channel is paused;
 	pause sound.
 
-Understand "resume" as unpausing. Unpausing is an action applying to nothing.
+Understand "resume" or "unpause" as unpausing. Unpausing is an action applying to nothing.
 Carry out unpausing:
+	if current sound channel is not paused:
+		say "Current sound channel is not paused.";
+		stop the action;
 	say "Channel [current sound channel] resumed.";
 	now the current sound channel is playing;
 	unpause sound.
@@ -339,6 +231,9 @@ Understand "destroy" as self-destructing. Self-destructing is an action applying
 		stop the action;
 	destroy channel (channel id of current sound channel);
 	say "Channel [current sound channel] destroyed.";
+	if the multiplay state of current sound channel is true:
+		handle multichannel stopped;
+		now multiplay state of current sound channel is false;
 	now the current sound channel is uncreated;
 	try number-setting channel knob to 1.
 
@@ -347,23 +242,71 @@ Understand "destroy channel/-- [number]" as channel-destructing. Channel-destruc
 	try self-destructing.
 
 Understand "simplify" as simplifying. Simplifying is an action applying to nothing. Carry out simplifying:
-	say "The PLAY MULTI and SIMPLIFY buttons disappear in a puff of smoke along with the volume change delay control. In their place a COMPLICATE button appears.";
+	if the simplify button is not in location:
+		say "The simplify button has disappeared.";
+		stop the action;
+	say "The PLAY MULTI and SIMPLIFY buttons disappear in a puff of smoke along with the fade delay control. In their place a COMPLICATE button appears.";
+	now the simplify button is nowhere;
 	now the multiplay button is nowhere;
-	now the volume change delay is nowhere;
+	now fade delay slider is nowhere;
 	now the complicate button is in location.
 
 Understand "complicate" as complicating. Complicating is an action applying to nothing. Carry out complicating:
-	say "The COMPLICATE button disappears in a puff of smoke. In its place you now see a PLAY MULTI button, a volume change delay control and a SIMPLIFY button.";
+	if the complicate button is not in location:
+		say "The complicate button has disappeared.";
+		stop the action;
+	say "The COMPLICATE button disappears in a puff of smoke. In its place you now see a PLAY MULTI button, a fade delay control and a SIMPLIFY button.";
 	now the multiplay button is in location;
-	now the volume change delay is in location;
-	now the simplify buttoon is in location;
+	now the fade delay slider is in location;
+	now the simplify button is in location;
 	now the complicate button is nowhere.
 
 Understand "hint" as hinting. Hinting is an action applying to nothing. Carry out hinting:
 	sound load hint;
-	say "Called glk_sound_load_hint( Sound of AIFF, 1).";
+	say "Called glk_sound_load_hint( Sound of AIFF, 1 ).";
 
-Section 2 - Switching sound type
+Book 2 - Multiplay
+
+Understand "multiplay" or "play multi/multiple" or "multi" or "multiple" or "play all" as multiplaying. Multiplaying is an action applying to nothing.
+Carry out multiplaying:
+	if the multiplay button is not in location:
+		say "The multiplay button is gone.";
+		stop the action;
+	say "You push the multiplay button.";
+	multiplay sound.
+
+To multiplay sound:
+	if multiplay channels remaining is greater than 0:
+		say "There already seems to be an active play multi command. This will be replaced by the new one, as this test unfortunately does not yet support multiple simultaneous play multi commands.";
+	let N be 0;
+	let L be a list of sound channels;
+	repeat with C running through sound channels:
+		unless C is uncreated:
+			add C to L;
+			now multiplay state of C is true;
+			now C is playing;
+			add multisound C at N;
+			increment N;
+	if N is greater than 0:
+		let R be multiplay result with N channels and notify (multinotification);
+		say "Tried to simultaneously start playback on [regarding the number of entries in L]channel[s] [L].";
+		now multiplay channels remaining is R;
+		say "Successfully started playing [R] channel[s].";
+
+[The global variables below are used to keep track of channels included in a glk_schannel_play_multi() command.]
+
+Multinotification is a number that varies. Multinotification is initially 101.
+
+Multiplay channels remaining is a number that varies. Multiplay channels remaining is initially 0.
+
+Include (-
+
+Array multi_chanarray --> 100;
+Array multi_soundarray --> 100;
+
+-) after "Definitions.i6t".
+
+Book 3 - Switching sound type
 
 Understand "aiff" as aiffing.  Aiffing is an action applying to nothing. Carry out aiffing:
 	if the channel-sound of current sound channel is sound of AIFF:
@@ -397,7 +340,7 @@ Understand "set [type switch] to [sound type]"  as soundtype-setting it to. Soun
 		-- ogg:
 			try ogging.
 
-Section 2 - Changing numeric sliders
+Book 4 - Changing numeric sliders
 
 Understand "set [something] to [number]" as number-setting it to. Number-setting it to is an action applying to one thing and one number. Carry out number-setting it to:
 	if the noun is:
@@ -405,20 +348,13 @@ Understand "set [something] to [number]" as number-setting it to. Number-setting
 			if the index of current sound channel is the number understood:
 				say "[The noun] is already set to [the number understood].";
 				stop the action;
-			now the current sound channel is the chan in row (the number understood)  of the Table of Sound-Channels;
+			if the number understood is greater than 100 or the number understood is less than 1:
+				say "The sound channels are numbered from 1 to 100.";
+				stop the action;
+			now the current sound channel is the chan in row (the number understood) of the Table of Sound-Channels;
 			now current channel id is the channel id of current sound channel;
 			if the current sound channel is uncreated:
-				if glulx sounds are fully supported:
-					now the channel id of current sound channel is new channel with rock (rock of current sound channel) and volume (volume of current sound channel);
-				otherwise:
-					now the channel id of current sound channel is new channel with rock (rock of current sound channel);
-				unless the channel id of current sound channel is 0:
-					now the current sound channel is stopped;
-					now the current channel id is the channel id of current sound channel;
-					now the rock of current sound channel is the rock of channel id (current channel id);
-					say "Created new sound channel with id [channel id of current sound channel] and rock [rock of current sound channel].";
-				otherwise:
-					say "[bracket]Something went wrong. Could not create channel [current sound channel]. All kinds of things are likely to break.[close bracket][paragraph break]";
+				create a new sound channel;
 		-- the volume slider:
 			if the volume of current sound channel is the number understood:
 				say "[The noun] is already set to [the number understood].";
@@ -427,7 +363,10 @@ Understand "set [something] to [number]" as number-setting it to. Number-setting
 				say "The volume slider is numbered from 0 to 65536.";
 				stop the action;
 			now the volume of current sound channel is the number understood;
-			volume-adjust to the number understood with a duration of (volume change delay of the current sound channel) and notification (notification of the current sound channel);
+			if the simplify button is in location:
+				volume-adjust to the number understood with a duration of (volume change delay of the current sound channel) and notification (notification of the current sound channel);
+			otherwise:
+				volume-adjust to the number understood;
 		-- the repeats knob:
 			if the repeats of current sound channel is the number understood:
 				say "[The noun] is already set to [the number understood].";
@@ -445,15 +384,45 @@ Understand "set [something] to [number]" as number-setting it to. Number-setting
 			now the notification of current sound channel is the number understood;
 	say "You set [the noun] to [the number understood]."
 
-Understand "set volume to max" or "max volume" as volume-maxing. Volume-maxing is an action applying to nothing. Carry out volume-maxing:
-	try number-setting the volume slider to 65536.
+To create a new sound channel:
+	if the simplify button is in location:
+		now the channel id of current sound channel is new channel with rock (rock of current sound channel) and volume (volume of current sound channel);
+	otherwise:
+		now the channel id of current sound channel is new channel with rock (rock of current sound channel);
+	unless the channel id of current sound channel is 0:
+		now the current sound channel is stopped;
+		now the current channel id is the channel id of current sound channel;
+		now the rock of current sound channel is the rock of channel id (current channel id);
+		say "Created a new sound channel with id [channel id of current sound channel] and rock [rock of current sound channel].";
+	otherwise:
+		say "[bracket]Something went wrong. Could not create channel [current sound channel]. All kinds of things are likely to break.[close bracket][paragraph break]";
 
 Understand the command "switch" as something new. Understand the command "turn" as something new.
 
 Understand the command "switch" as "set".
 Understand the command "turn" as "set".
 
-Section 3 - Convenience actions, looping and fading
+Book 5 - Convenience actions, looping and fading
+
+Understand "examine controls" or "look at/-- controls" as listing controls. Listing controls is an action applying to nothing. Carry out listing controls:
+	let L be a list of things;
+	repeat with item running through things in location:
+		unless item is player or item is large display:
+			add item to L;
+	say "You can se [L with indefinite articles].[paragraph break][bracket]You can get more information about individual controls by examining them.[close bracket][line break]"
+
+Understand "set volume to max" or "max volume" as volume-maxing. Volume-maxing is an action applying to nothing. Carry out volume-maxing:
+	try number-setting the volume slider to 65536.
+
+Understand "[number]" or "channel [number]" or "sound channel [number]" as channelling. Channelling is an action applying to one number. Carry out channelling:
+	try number-setting the channel knob to the number understood.
+
+Understand "examine sound/-- channel/-- [number]" or "look at/-- sound/-- channel/-- [number]" as channel-examining. Channel-examining is an action applying to one number. Carry out channel-examining:
+	if the number understood is greater than 100 or the number understood is less than 1:
+		say "The sound channels are numbered from 1 to 100.";
+		stop the action;
+	let C be the chan in row (the number understood) of the Table of Sound-Channels;
+	say "[description of C][line break]".
 
 Understand "play [sound type]" as type-playing. Type-playing is an action applying to one sound type. Carry out type-playing:
 	try soundtype-setting type switch to the sound type understood;
@@ -483,13 +452,39 @@ Understand "fade to/-- [number]" as volume-fading to. Volume-fading to is an act
 		try number-setting the fade delay slider to 2000;
 	try number-setting volume to the number understood;
 
-Understand "fade out/--" as vaguely fading. Vaguely fading is an action applying to nothing. Carry out vaguely fading:
+Understand "fade out/--" as vaguely fading out. Vaguely fading out is an action applying to nothing. Carry out vaguely fading out:
 		try volume-fading to 0 instead.
 
-Chapter 5 - Handle sound notifications
+Understand "fade out/--" as vaguely fading in. Vaguely fading in is an action applying to nothing. Carry out vaguely fading in:
+		try volume-fading to 65536 instead.
 
-To restart line input in the/-- main window:
-	(- glk_request_line_event(gg_mainwin, buffer+WORDSIZE, INPUT_BUFFER_LEN-WORDSIZE, 0); -)
+Volume 5 - Describing the room
+
+The description of the Sound Stage is "This is a mixer room full of different controls. Most prominent is a large PLAY button, accompanied by the usual PAUSE and STOP buttons, and a volume control. There is also a switch for sound type (set to play [sound-type-name of the channel-sound of current sound channel]), and another one to change the sound channel, currently set to [index of current sound channel].[paragraph break]Furthermore, you notice a DESTROY button, a HINT button, [if the simplify button is in location]a SIMPLIFY button, a PLAY MULTI button and a fade delay control[otherwise]and a COMPLICATE button[end if]. You can get a full list of all available controls by typing EXAMINE CONTROLS."
+
+The large display is fixed in place in Sound Stage. The initial appearance of the large display is "There is a large display on the wall here. [description of the large display]". The description of the large display is "It says: 'Open sound channels: [open-channels-list]. Currently playing: [playing-channels-list]'."
+
+To say open-channels-list:
+	if there is a sound channel which is not uncreated:
+		let L be a list of sound channels;
+		repeat through Table of Sound-Channels:
+			unless chan entry is uncreated:
+				add chan entry to L;
+		say "[L]";
+	otherwise:
+		say "none".
+
+To say playing-channels-list:
+	if there is a sound channel which is playing:
+		let L be a list of sound channels;
+		repeat through Table of Sound-Channels:
+			if chan entry is playing:
+				add chan entry to L;
+		say "[L][if multiplay channels remaining is greater than 1]. [bracket]Channels that are part of a play multi command will be listed as playing even if they have finished[close bracket][end if]";
+	otherwise:
+		say "none".
+
+Volume 6 - Handle sound notifications
 
 Glulx input handling rule for a volume-event:
 	cancel line input in the main window;
@@ -500,15 +495,196 @@ Glulx input handling rule for a sound-notify-event:
 	cancel line input in the main window;
 	let N be glk event value 2;
 	if N is multinotification:
-		decrement multiplay channels remaining;
-		say "[bracket]Sound notification: A sound finished playing. It was part of a multichannel play command. [if multiplay channels remaining is greater than 0]There [regarding multiplay channels remaining][are] [multiplay channels remaining] channel[s] still playing as part of this command[otherwise]That was the last channel, the multichannel command is concluded[end if].[close bracket][line break]>";
-		if multiplay channels remaining is less than 1:
-			repeat through the Table of Sound-Channels:
-				if the multiplay index of chan entry is multinotification:
-					now multiplay index of chan entry is 0;
-					now the chan entry is stopped;
+		handle multichannel stopped;
 	otherwise:
 		say "[bracket]Sound notification: A sound finished playing on channel [N].[close bracket][line break]>";
 		let C be the chan in row N of the Table of Sound-Channels;
 		now C is stopped;
 	restart line input in the main window.
+
+To handle multichannel stopped:
+	decrement multiplay channels remaining;
+	say "[bracket]A sound, which was part of a play multi command, stopped playing. [if multiplay channels remaining is greater than 0]There [regarding multiplay channels remaining][are] [multiplay channels remaining] channel[s] still playing as part of this command[otherwise]That was the last channel, the play multi command is concluded[end if].[close bracket][line break]>";
+	if multiplay channels remaining is less than 1:
+		repeat with C running through sound channels:
+			if the multiplay state of C is true:
+				now multiplay state of C is false;
+				now C is stopped;
+
+Volume 7 - Intialization
+
+Book 1 - When play begins
+
+First when play begins:
+	say "Welcome to the Sound Test![paragraph break]The Ogg Vorbis file included in this test is 'Cool Adventure Intro' by Eric Matyas. See www.soundimage.org[line break]The MOD file is 'Run' by Stranger. See modarchive.org[line break]The AIFF file is taken from the Glulx test game 'Sensory Jam' by Andrew Plotkin. See eblong.com/zarf/glulx/[paragraph break]".
+
+When play begins:
+	check for unsupported features;
+	let N be 1;
+	let R be -1 + the rock of channel id (foreground channel id);
+	repeat with S running through sound channels:
+		choose row N from the Table of Sound-Channels;
+		now the chan entry is S;
+		now the index of S is N;
+		now the notification of S is N;
+		now the rock of S is R + N;
+		increment N;
+	now current sound channel is chan in row 1 of the Table of Sound-Channels;
+	now current channel id is foreground channel id;
+	now channel id of current sound channel is current channel id;
+	[say "Set channel 1 (and current sound channel) to foreground channel, id [channel id of current sound channel] and rock [rock of channel id (foreground channel id)].";]
+	let BGC be chan in row 2 of the Table of Sound-Channels;
+	now the channel id of BGC is background channel id;
+	[say "Set channel 2 to background channel, id [background channel id] and rock [rock of channel id (background channel id)].";]
+	recover sound channels;
+	restore channel states.
+
+To check for unsupported features:
+	unless glulx sound is supported:
+		say "This interpreter is unable to play sounds, so nothing in this test suite will work. You can type yes to go ahead and run it anyway, but it is not recommended.[paragraph break]>> ";
+		unless the player consents:
+			end the story abruptly;
+	otherwise:
+		unless glulx sounds are fully supported:
+			if the simplify button is in location:
+				say "A hollow voice says: 'This interpreter only provides basic sound support. Removing unsupported functions.'";
+				try simplifying;
+				say "[bracket]You can reinstate them with the COMPLICATE button, but they probably won't work.[close bracket][line break]";
+
+Book 2 - After restore
+
+[A hack to always run some code after a successful restore]
+restore the game rule response (B) is "[post-restore routine]";
+
+ To say post-restore routine:
+	say "Ok. ";
+	check for unsupported features;
+	recover sound channels;
+	recreate sound channels;
+	restore channel states.
+
+To recover sound channels:
+	let C be the channel following 0;
+	while C is not 0:
+		[say "Found a channel with id [C] and rock [rock of channel id C].";]
+		repeat with C2 running through sound channels:
+			if rock of C2 is rock of channel id C:
+				now channel id of C2 is C;
+				[say "Added it at index [index of C2].";]
+				if C2 is uncreated:
+					now C2 is stopped;
+		now C is the channel following C;
+
+To recreate sound channels:
+	repeat with C running through sound channels which are not uncreated:
+		let found be false;
+		let C2 be the channel following 0;
+		while C2 is not 0:
+			if rock of C is rock of channel id C2:
+				now found is true;
+			now C2 is the channel following C2;
+		if found is false:
+			now channel id of C is new channel with rock (rock of C);
+			[say "Created a new channel at index [index of C] with id [channel id of C] and rock [rock of C].";]
+
+To restore channel states:
+	let multi be false;
+	repeat with C running through sound channels:
+		if C is stopped:
+			stop channel id (channel id of C);
+			[say "Stopped channel [C].";]
+		otherwise if C is playing or C is paused:
+			play channel id (channel id of C) with sound (channel-sound of C) and (repeats of C) repeats and notification (notification of C);
+			[say "Started channel [C].";]
+			if C is paused:
+				pause channel id (channel id of C);
+				[say "Paused channel [C].";]
+		if multiplay state of C is true:
+			now multi is true;
+	if multi is true and glulx sounds are fully supported:
+		multiplay sound;
+
+Volume 8 - Inform 6 glue
+
+To end the story abruptly:
+	(- VM_KeyChar(); quit; -)
+
+To decide which number is foreground channel id:
+	(- gg_foregroundchan -).
+
+To decide which number is background channel id:
+	(- gg_backgroundchan -).
+
+To decide which number is the rock of channel id (N - a number):
+	(- glk_schannel_get_rock({N}) -).
+
+To decide which number is the channel following (N - a number):
+	(- glk_schannel_iterate({N}, 0) -).
+
+To restart line input in the/-- main window:
+	(- glk_request_line_event(gg_mainwin, buffer+WORDSIZE, INPUT_BUFFER_LEN-WORDSIZE, 0); -)
+
+To play (SFX - sound name) with (R - a number) repeats/repeat and notification (N - a number):
+	(- glk_schannel_play_ext(current_channel, ResourceIDsOfSounds-->{SFX}, {R}, {N}); -).
+
+To play channel id (C - a number) with sound (SFX - sound name) and (R - a number) repeats/repeat and notification (N - a number):
+	(- glk_schannel_play_ext({C}, ResourceIDsOfSounds-->{SFX}, {R}, {N}); -).
+
+To play (SFX - sound name):
+	(- glk_schannel_play(current_channel, ResourceIDsOfSounds-->{SFX}); -).
+
+To volume-adjust to (N - a number):
+	(- glk_schannel_set_volume(current_channel, {N}); -).
+
+To volume-adjust to (X - a number) with a duration of (Y - a number) and notification (N - a number):
+	(- glk_schannel_set_volume_ext(current_channel, {X}, {Y}, {N}); -).
+
+To stop sound:
+	(- glk_schannel_stop(current_channel); -).
+
+To stop channel id (N - a number):
+	(- glk_schannel_stop({N}); -).
+
+To pause sound:
+	(- glk_schannel_pause(current_channel); -).
+
+To pause channel id (N - a number):
+	(- glk_schannel_pause({N}); -).
+
+To unpause sound:
+	(- glk_schannel_unpause(current_channel); -).
+
+To add multisound (S - a sound channel) at (N - a number):
+	(- multi_chanarray --> {N} = {S}.(+ channel id +); multi_soundarray --> {N} = ResourceIDsOfSounds --> {S}.(+ channel-sound +); -).
+
+To decide which number is multiplay result with (C - a number) channels and notify (N - a number):
+	(- glk_schannel_play_multi(multi_chanarray, {C}, multi_soundarray,  {C}, {N}); -).
+
+To decide which number is new channel with rock (R - a number) and volume (V - a number):
+	(-  glk_schannel_create_ext({R}, {V}) -).
+
+To decide which number is new channel with rock (R - a number):
+	(-  glk_schannel_create({R}) -).
+
+To destroy channel (C - a number):
+	(- glk_schannel_destroy({C}); -).
+
+To sound load hint:
+	(- glk_sound_load_hint(ResourceIDsOfSounds-->(+ sound of AIFF +), 1); -).
+
+To stop all channels:
+	(- Stop_all_channels(); -).
+
+Include (-
+
+[ Stop_all_channels chan;
+
+	chan = glk_schannel_iterate(0, 0);
+	while (chan)
+	{
+		glk_schannel_stop(chan);
+		chan = glk_schannel_iterate(chan, 0);
+	}
+];
+
+-).
