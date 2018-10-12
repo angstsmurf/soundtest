@@ -6,7 +6,7 @@ Include Glulx Entry Points by Emily Short.
 
 Use direct event handling.
 
-A sound channel is a kind of thing.
+[The sound channel kind is a proxy for real, Glk level sound channels. When the story begins only two Glk channels are created, the "built-in" foreground channel and background channel, which are assigned as sound channels with index 1 and 2 respectively.]
 
 The current sound channel is a sound channel that varies.
 
@@ -16,6 +16,8 @@ Sound of AIFF is the file "wind.aiff".
 Sound of MOD is the file "stranger_-_run.mod".
 Sound of OGG is the file "Cool-Adventure-Intro.ogg".
 
+[The Table of Sound-Channels is a way to simplify keeping track of all the sound channels. The index of a sound channel always corresponds to its row in this table.]
+
 Table of Sound-Channels
 chan (a sound channel)
 with 100 blank rows
@@ -24,6 +26,7 @@ with 100 blank rows
 
 The current channel id is a number that varies. The current channel id variable translates into I6 as "current_channel".
 
+[The two global variables below are used to keep track of channels included ina a glk_schannel_play_multi() command.]
 Multinotification is a number that varies. Multinotification is initially 101.
 
 Multiplay channels remaining is a number that varies. Multiplay channels remaining is initially 0.
