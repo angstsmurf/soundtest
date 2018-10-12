@@ -100,19 +100,31 @@ restore the game rule response (B) is "[post-restore routine]";
 
  To say post-restore routine:
  	say "Ok. ";
- 	recover sound channels.
+	recover sound channels;
+	recreate sound channels.
 
 To recover sound channels:
 	let C be the channel following 0;
 	while C is not 0:
-		say "Found a channel with id [C] and rock [rock of channel id C].";
+		[say "Found a channel with id [C] and rock [rock of channel id C].";]
 		repeat with C2 running through sound channels:
 			if rock of C2 is rock of channel id C:
 				now channel id of C2 is C;
-				say "Added it at index [index of C2].";
-				now the status of C2 is stopped;		
+				[say "Added it at index [index of C2].";]
+				now C2 is stopped;
 		now C is the channel following C;
 
+To recreate sound channels:
+	repeat with C running through sound channels which are not uncreated:
+		let found be false;
+		let C2 be the channel following 0;
+		while C2 is not 0:
+			if rock of C is rock of channel id C2:
+				now found is true;
+			now C2 is the channel following C2;
+		if found is false:
+			now channel id of C is new channel with rock (rock of C);
+			[say "Created a new channel at index [index of C] with id [channel id of C] and rock [rock of C].";]
 
 To end the story abruptly:
 	(- VM_KeyChar(); quit; -)
