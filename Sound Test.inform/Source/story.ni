@@ -42,7 +42,9 @@ Array multi_soundarray --> 100;
 
 The Sound Stage is a room.
 
-The description of the Sound Stage is "This is a mixer room with lots of buttons and controls. Most prominent is a large PLAY button, accompanied by the usual PAUSE and STOP buttons, and a volume control. There is also a switch for sound type (set to play [sound-type-name of the channel-sound of current sound channel]), and another one to change the sound channel, currently set to [index of current sound channel].[paragraph break]Furthermore you notice a DESTROY button, a HINT button, [if simplify button is in location]a SIMPLIFY button, a PLAY MULTI button and a volume change delay control[otherwise]and a COMPLICATE button[end if].[paragraph break]There is also a large display here reading: 'Open sound channels: [open-channels-list]. Currently playing: [playing-channels-list]'.[if multiplay channels remaining is greater than 1] (Channels that are part of a multichannel play command will be listed even if they have finished.)"
+The description of the Sound Stage is "This is a mixer room with lots of buttons and controls. Most prominent is a large PLAY button, accompanied by the usual PAUSE and STOP buttons, and a volume control. There is also a switch for sound type (set to play [sound-type-name of the channel-sound of current sound channel]), and another one to change the sound channel, currently set to [index of current sound channel].[paragraph break]Furthermore you notice a DESTROY button, a HINT button, [if simplify button is in location]a SIMPLIFY button, a PLAY MULTI button and a volume change delay control[otherwise]and a COMPLICATE button[end if]."
+
+The large display is fixed in place in Sound Stage. The initial appearance of the large display is "There is also a large display here reading: 'Open sound channels: [open-channels-list]. Currently playing: [playing-channels-list]'.[if multiplay channels remaining is greater than 1] (Channels that are part of a multichannel play command will be listed even if they have finished.)"
 
 To say open-channels-list:
 	if there is a sound channel which is not uncreated:
