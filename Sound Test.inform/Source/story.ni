@@ -45,24 +45,24 @@ The Sound Stage is a room.
 The description of the Sound Stage is "This is a mixer room with lots of buttons and controls. Most prominent is a large PLAY button, accompanied by the usual PAUSE and STOP buttons, and a volume control. There is also a switch for sound type (set to play [sound-type-name of the channel-sound of current sound channel]), and another one to change the sound channel, currently set to [index of current sound channel].[paragraph break]Furthermore you notice a DESTROY button, a HINT button, [if simplify button is in location]a SIMPLIFY button, a PLAY MULTI button and a volume change delay control[otherwise]and a COMPLICATE button[end if].[paragraph break]There is also a large display here reading: 'Open sound channels: [open-channels-list]. Currently playing: [playing-channels-list]'.[if multiplay channels remaining is greater than 1] (Channels that are part of a multichannel play command will be listed even if they have finished.)"
 
 To say open-channels-list:
-	let L be a list of sound channels;
-	repeat through Table of Sound-Channels:
-		unless status of chan entry is uncreated:
-			add chan entry to L;
-	if the number of entries in L is 0:
-		say "none";
+	if there is a sound channel which is not uncreated:
+		let L be a list of sound channels;
+		repeat through Table of Sound-Channels:
+			unless chan entry is uncreated:
+				add chan entry to L;
+		say "[L]";
 	otherwise:
-		say "[L]".
+		say "none".
 
 To say playing-channels-list:
-	let L be a list of sound channels;
-	repeat through Table of Sound-Channels:
-		if status of chan entry is playing:
-			add chan entry to L;
-	if the number of entries in L is 0:
-		say "none";
+	if there is a sound channel which is playing:
+		let L be a list of sound channels;
+		repeat through Table of Sound-Channels:
+			if chan entry is playing:
+				add chan entry to L;
+		say "[L]";
 	otherwise:
-		say "[L]".
+		say "none".
 
 First when play begins:
 	say "Welcome to the Sound Test![paragraph break]The Ogg Vorbis file included in this test is 'Cool Adventure Intro' by Eric Matyas. See www.soundimage.org[line break]The MOD file is 'Run' by Stranger. See modarchive.org[line break]The AIFF file is taken from the Glulx test game 'Sensory Jam' by Andrew Plotkin. See eblong.com/zarf/glulx/[paragraph break]".
@@ -147,9 +147,7 @@ A sound channel has a sound name called channel-sound. The channel-sound of a so
 
 A sound channel has a number called multiplay index. The multiplay index of a sound channel is usually 0.
 
-A state is a kind of value. The states are uncreated, stopped, playing and paused.
-
-A sound channel has a state called status. The status of a sound channel is usually uncreated.
+A sound channel can be uncreated, stopped, playing or paused. A sound channel is usually uncreated.
 
 The description of a sound channel is "Sound channel [index of the item described] is set to play [sound-type-name of the channel-sound of the item described] at volume [the volume of the item described] with [repeats of the item described] repeat[s] and notification number [notification of the item described]."
 
@@ -241,24 +239,24 @@ To play (SFX - sound name) with (R - a number) repeats/repeat and notification (
 
 To volume-adjust to (N - a number):
 	(- glk_schannel_set_volume(current_channel, {N}); -).
-	
+
 To volume-adjust to (X - a number) with a duration of (Y - a number) and notification (N - a number):
 	(- glk_schannel_set_volume_ext(current_channel, {X}, {Y}, {N}); -).
 
 To stop sound:
 	(- glk_schannel_stop(current_channel); -).
-	
+
 To pause sound:
 	(- glk_schannel_pause(current_channel); -).
 
 To unpause sound:
 	(- glk_schannel_unpause(current_channel); -).
-	
+
 To multiplay sound:
 	let N be 0;
 	let L be a list of sound channels;
 	repeat through Table of Sound-Channels:
-		unless the status of the chan entry is uncreated:
+		unless the chan entry is uncreated:
 			add chan entry to L;
 			now multiplay index of chan entry is multinotification;
 			add multisound chan entry at N;
@@ -295,7 +293,7 @@ Section 1 - Pushing buttons
 Understand "play" as playing. Playing is an action applying to nothing.
 Carry out playing:
 	say "You push the play button. Sound channel [current sound channel] begins to play the [sound-type-name of channel-sound of current sound channel] with [repeats of current sound channel] repetitions and notification number [notification of current sound channel].";
-	now the status of current sound channel is playing;
+	now the current sound channel is playing;
 	play (channel-sound of current sound channel) with (repeats of current sound channel) repeats and notification (notification of current sound channel).
 
 Understand "multiplay" or "play multi/multiple" or "multi" or "multiple" as multiplaying. Multiplaying is an action applying to nothing.
@@ -306,19 +304,19 @@ Carry out multiplaying:
 Understand "stop" as stopping. Stopping is an action applying to nothing.
 Carry out stopping:
 	say "Channel [current sound channel] stopped.";
-	now the status of current sound channel is stopped;
+	now the current sound channel is stopped;
 	stop sound.
 
 Understand "pause" as pausing. Pausing is an action applying to nothing.
 Carry out pausing:
 	say "Channel [current sound channel] paused.";
-	now the status of current sound channel is paused;
+	now the current sound channel is paused;
 	pause sound.
 
 Understand "resume" as unpausing. Unpausing is an action applying to nothing.
 Carry out unpausing:
 	say "Channel [current sound channel] resumed.";
-	now the status of current sound channel is playing;
+	now the current sound channel is playing;
 	unpause sound.
 
 Understand "destroy" as self-destructing. Self-destructing is an action applying to nothing. Carry out self-destructing:
@@ -327,7 +325,7 @@ Understand "destroy" as self-destructing. Self-destructing is an action applying
 		stop the action;
 	destroy channel (channel id of current sound channel);
 	say "Channel [current sound channel] destroyed.";
-	now the status of current sound channel is uncreated;
+	now the current sound channel is uncreated;
 	try number-setting channel knob to 1.
 
 Understand "destroy channel/-- [number]" as channel-destructing. Channel-destructing is an action applying to one number. Carry out channel-destructing:
@@ -388,13 +386,13 @@ Understand "set [something] to [number]" as number-setting it to. Number-setting
 				stop the action;
 			now the current sound channel is the chan in row (the number understood)  of the Table of Sound-Channels;
 			now current channel id is the channel id of current sound channel;
-			if status of current sound channel is uncreated:
+			if the current sound channel is uncreated:
 				if glulx sounds are fully supported:
 					now the channel id of current sound channel is new channel with rock (rock of current sound channel) and volume (volume of current sound channel);
 				otherwise:
 					now the channel id of current sound channel is new channel with rock (rock of current sound channel);
 				unless the channel id of current sound channel is 0:
-					now the status of current sound channel is stopped;
+					now the current sound channel is stopped;
 					now the current channel id is the channel id of current sound channel;
 					now the rock of current sound channel is the rock of channel id (current channel id);
 					say "Created new sound channel with id [channel id of current sound channel] and rock [rock of current sound channel].";
@@ -487,9 +485,9 @@ Glulx input handling rule for a sound-notify-event:
 			repeat through the Table of Sound-Channels:
 				if the multiplay index of chan entry is multinotification:
 					now multiplay index of chan entry is 0;
-					now the status of chan entry is stopped;
+					now the chan entry is stopped;
 	otherwise:
 		say "[bracket]Sound notification: A sound finished playing on channel [N].[close bracket][line break]>";
 		let C be the chan in row N of the Table of Sound-Channels;
-		now the status of C is stopped;
+		now C is stopped;
 	restart line input in the main window.
