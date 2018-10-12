@@ -71,7 +71,7 @@ First when play begins:
 
 When play begins:
 	unless glulx sound is supported:
-		say "This interpreter is unable to play sounds, so nothing in this test suite will work. You can type yes to go ahead anyway, but it is not recommended.[paragraph break]>> ";
+		say "This interpreter is unable to play sounds, so nothing in this test suite will work. You can type yes to go ahead and run it anyway, but it is not recommended.[paragraph break]>> ";
 		unless the player consents:
 			end the story abruptly;
 	otherwise:
