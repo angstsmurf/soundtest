@@ -347,10 +347,17 @@ Understand "destroy channel/-- [number]" as channel-destructing. Channel-destruc
 	try self-destructing.
 
 Understand "simplify" as simplifying. Simplifying is an action applying to nothing. Carry out simplifying:
-	say "Basic sound functionality only.";
+	say "The PLAY MULTI and SIMPLIFY buttons disappear in a puff of smoke along with the volume change delay control. In their place a COMPLICATE button appears.";
+	now the multiplay button is nowhere;
+	now the volume change delay is nowhere;
+	now the complicate button is in location.
 
 Understand "complicate" as complicating. Complicating is an action applying to nothing. Carry out complicating:
-	say "Complete sound functionality.";
+	say "The COMPLICATE button disappears in a puff of smoke. In its place you now see a PLAY MULTI button, a volume change delay control and a SIMPLIFY button.";
+	now the multiplay button is in location;
+	now the volume change delay is in location;
+	now the simplify buttoon is in location;
+	now the complicate button is nowhere.
 
 Understand "hint" as hinting. Hinting is an action applying to nothing. Carry out hinting:
 	sound load hint;
