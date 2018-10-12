@@ -92,7 +92,7 @@ When play begins:
 	now the channel id of BGC is background channel id;
 	[say "Set channel 2 to background channel, id [background channel id] and rock [rock of channel id (background channel id)].";]
 	recover sound channels.
-	
+
 [A hack to always run some code after a successful restore]
 restore the game rule response (B) is "[post-restore routine]";
 
@@ -117,7 +117,7 @@ To end the story abruptly:
 
 To decide which number is foreground channel id:
 	(- gg_foregroundchan -).
-	
+
 To decide which number is background channel id:
 	(- gg_backgroundchan -).
 
@@ -126,7 +126,7 @@ To decide which number is the rock of channel id (N - a number):
 
 To decide which number is the channel following (N - a number):
 	(- glk_schannel_iterate({N}, 0) -).
-	
+
 Chapter 1 - Components of the channel kind
 
 A sound channel has a number called the channel id. The channel id of a sound channel is usually 0.
@@ -143,7 +143,7 @@ A sound channel has a number called volume change delay. The volume change delay
 
 A sound channel has a number called notification. The notification of a sound channel is usually 1.
 
-A sound channel has a sound name called channel-sound. The channel-sound of a sound channel is usually sound of AIFF. 
+A sound channel has a sound name called channel-sound. The channel-sound of a sound channel is usually sound of AIFF.
 
 A sound channel has a number called multiplay index. The multiplay index of a sound channel is usually 0.
 
@@ -211,7 +211,7 @@ Instead of pushing the stop button:
 	try stopping.
 
 The destroy button is scenery in Sound Stage. The description is "This button will destroy the current sound channel."
-				
+
 Understand "destruction" and "self-destruct" and "self/-- destruct" as the destroy button.
 
 Instead of pushing the destroy button:
@@ -226,7 +226,7 @@ The complicate button is scenery in Sound Stage. The description is "This button
 
 Instead of pushing the complicate button:
 	try complicating.
-	
+
 The hint button is scenery in Sound Stage. The description is "This button will test the  glk_sound_load_hint function."
 
 Instead of pushing the hint button:
@@ -357,7 +357,7 @@ Understand "mod" as modding.  Modding is an action applying to nothing. Carry ou
 	otherwise:
 		now the channel-sound of current sound channel is sound of MOD;
 		say "You set the sound type to MOD."
-	
+
 Understand "ogg" as ogging.  Ogging is an action applying to nothing. Carry out ogging:
 	if the channel-sound of current sound channel is sound of OGG:
 		say "The current sound channel is already set to play OGG.";
