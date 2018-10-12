@@ -8,9 +8,9 @@ Use direct event handling.
 
 [The sound channel kind is a proxy for real, Glk level sound channels. When the story begins only two Glk channels are created, the "built-in" foreground channel and background channel, which are assigned as sound channels with index 1 and 2 respectively.]
 
-The current sound channel is a sound channel that varies.
+A sound channel is a kind of thing. There are 100 sound channels.
 
-The repository is a container. In the repository are 100 sound channels.
+The current sound channel is a sound channel that varies.
 
 Sound of AIFF is the file "wind.aiff".
 Sound of MOD is the file "stranger_-_run.mod".
@@ -34,7 +34,6 @@ Multiplay channels remaining is a number that varies. Multiplay channels remaini
 Include (-
 
 Global current_channel = 1;
-Array sound_channels --> 100;
 
 Array multi_chanarray --> 100;
 Array multi_soundarray --> 100;
