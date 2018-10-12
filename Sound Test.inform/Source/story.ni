@@ -182,6 +182,10 @@ Understand "play simple" or "simple-play" or "simple" as simple-playing. Simple-
 	now the current sound channel is playing;
 	play (channel-sound of current sound channel).
 
+Understand "play channel/-- [number]" as channel-playing. Channel-playing is an action applying to one number. Carry out channel-playing:
+	try number-setting channel knob to the number understood;
+	try playing.
+
 Understand "stop" as stopping. Stopping is an action applying to nothing.
 Carry out stopping:
 	stop sound;
@@ -193,6 +197,10 @@ Carry out stopping:
 		now multiplay state of current sound channel is false;
 	say "Channel [current sound channel] stopped.";
 	now the current sound channel is stopped.
+
+Understand "stop channel/-- [number]" as channel-stopping. Channel-stopping is an action applying to one number. Carry out channel-stopping:
+	try number-setting channel knob to the number understood;
+	try stopping.
 
 Understand "stop all" as all-stopping. All-stopping is an action applying to nothing. Carry out all-stopping:
 	stop all channels;
@@ -216,7 +224,11 @@ Carry out pausing:
 	now the current sound channel is paused;
 	pause sound.
 
-Understand "resume" or "unpause" as unpausing. Unpausing is an action applying to nothing.
+Understand "pause channel/-- [number]" as channel-pausing. Channel-pausing is an action applying to one number. Carry out channel-pausing:
+	try number-setting channel knob to the number understood;
+	try pausing.
+
+Understand "resume" as unpausing. Unpausing is an action applying to nothing.
 Carry out unpausing:
 	if current sound channel is not paused:
 		say "Current sound channel is not paused.";
@@ -224,6 +236,12 @@ Carry out unpausing:
 	say "Channel [current sound channel] resumed.";
 	now the current sound channel is playing;
 	unpause sound.
+
+Understand "resume channel/-- [number]" as channel-unpausing. Channel-unpausing is an action applying to one number. Carry out channel-unpausing:
+	try number-setting channel knob to the number understood;
+	try unpausing.
+
+Understand the command "unpause" as "resume".
 
 Understand "destroy" as self-destructing. Self-destructing is an action applying to nothing. Carry out self-destructing:
 	if the index of current sound channel is 1:
@@ -455,7 +473,7 @@ Understand "fade to/-- [number]" as volume-fading to. Volume-fading to is an act
 Understand "fade out/--" as vaguely fading out. Vaguely fading out is an action applying to nothing. Carry out vaguely fading out:
 		try volume-fading to 0 instead.
 
-Understand "fade out/--" as vaguely fading in. Vaguely fading in is an action applying to nothing. Carry out vaguely fading in:
+Understand "fade in/--" as vaguely fading in. Vaguely fading in is an action applying to nothing. Carry out vaguely fading in:
 		try volume-fading to 65536 instead.
 
 Volume 5 - Describing the room
