@@ -151,7 +151,7 @@ The complicate button is scenery. The description is "This button will switch to
 Instead of pushing the complicate button:
 	try complicating.
 
-The hint button is scenery in Sound Stage. The description is "This button will test the  glk_sound_load_hint function."
+The hint button is scenery in Sound Stage. The description is "This button will test the glk_sound_load_hint function."
 
 Instead of pushing the hint button:
 	try hinting.
