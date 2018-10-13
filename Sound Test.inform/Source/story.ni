@@ -292,7 +292,13 @@ Understand "simplify" as simplifying. Simplifying is an action applying to nothi
 	now the pause button is nowhere;
 	now the unpause button is nowhere;
 	now fade delay slider is nowhere;
-	now the complicate button is in location.
+	now the complicate button is in location;
+	if there is a paused sound channel:
+		say "For your convenience, paused channels are resumed.";
+		repeat with C running through paused sound channels:
+			now C is playing;
+			if glulx sounds are fully supported:
+				unpause channel id (channel id of C);
 
 Understand "complicate" as complicating. Complicating is an action applying to nothing. Carry out complicating:
 	if the complicate button is not in location:
@@ -594,7 +600,7 @@ To check for unsupported features:
 			if the simplify button is in location:
 				say "A hollow voice says: 'This interpreter only provides basic sound support. Removing unsupported functions.'";
 				try simplifying;
-				say "[bracket]You can reinstate them with the COMPLICATE button, but they probably won't work.[close bracket][line break]";
+				say "[bracket]You can reinstate the advanced functions with the COMPLICATE button, but they probably won't work.[close bracket][line break]".
 
 Book 2 - After restore
 
@@ -603,10 +609,10 @@ restore the game rule response (B) is "[post-restore routine]";
 
  To say post-restore routine:
 	say "Ok. ";
-	check for unsupported features;
 	recover sound channels;
 	recreate sound channels;
-	restore channel states.
+	restore channel states;
+	check for unsupported features.
 
 To recover sound channels:
 	let C be the channel following 0;
@@ -618,7 +624,7 @@ To recover sound channels:
 				[say "Added it at index [index of C2].";]
 				if C2 is uncreated:
 					now C2 is stopped;
-		now C is the channel following C;
+		now C is the channel following C.
 
 To recreate sound channels:
 	repeat with C running through sound channels which are not uncreated:
@@ -643,13 +649,13 @@ To restore channel states:
 			if error is 0:
 				say "Error! Failed to play channel [C].";
 			[say "Started channel [C].";]
-			if C is paused:
+			if C is paused and glulx sounds are fully supported:
 				pause channel id (channel id of C);
 				[say "Paused channel [C].";]
 		if multiplay state of C is true:
 			now multi is true;
 	if multi is true and glulx sounds are fully supported:
-		multiplay sound;
+		multiplay sound.
 
 Volume 8 - Inform 6 glue
 
@@ -700,6 +706,9 @@ To pause channel id (N - a number):
 
 To unpause sound:
 	(- glk_schannel_unpause(current_channel); -).
+
+To unpause channel id (N - a number):
+	(- glk_schannel_unpause({N}); -).
 
 To add multisound (S - a sound channel) at (N - a number):
 	(- multi_chanarray --> {N} = {S}.(+ channel id +); multi_soundarray --> {N} = ResourceIDsOfSounds --> {S}.(+ channel-sound +); -).
