@@ -56,7 +56,7 @@ A sound channel has a truth state called multiplay state. The multiplay state of
 
 A sound channel can be uncreated, stopped, playing or paused. A sound channel is usually uncreated.
 
-The description of a sound channel is "Sound channel [index of the item described] [if the item described is uncreated]has not been created yet. You can create a sound channel simply by setting the channel switch to its number[otherwise]is set to play [sound-type-name of the channel-sound of the item described] at volume [the volume of the item described] with [repeats of the item described] repeat[s] and notification number [notification of the item described]. It is currently [status of the item described][end if][if the multiplay state of the item described is true]. This channel seems to be part of a play multi command[end if]."
+The description of a sound channel is "Sound channel [index of the item described] [if the item described is uncreated]has not been created yet. You can create a sound channel simply by setting the channel switch to its number[otherwise]is set to play [sound-type-name of the channel-sound of the item described] at volume [the volume of the item described] with [repeats of the item described] repetition[s] and notification number [notification of the item described]. It is currently [status of the item described][end if][if the multiplay state of the item described is true]. This channel seems to be part of a play multi command[end if]."
 
 To say sound-type-name of (N – a sound name):
 	if N is:
@@ -177,7 +177,7 @@ Carry out playing:
 	if error is 0:
 		say "An error occurs! The channel did not start playing![line break]";
 		stop the action;
-	say "Sound channel [current sound channel] [if current sound channel is playing]stops playing its previous sound and [end if]begins to play the [sound-type-name of channel-sound of current sound channel] at volume [volume of current sound channel] with [repeats of current sound channel] repetitions and notification number [notification of current sound channel].";
+	say "Sound channel [current sound channel] [if current sound channel is playing]stops playing its previous sound and [end if]begins to play the [sound-type-name of channel-sound of current sound channel] at volume [volume of current sound channel] with [repeats of current sound channel] repetition[s] and notification number [notification of current sound channel].";
 	if the multiplay state of current sound channel is true:
 		handle multichannel stopped;
 		now multiplay state of current sound channel is false;
