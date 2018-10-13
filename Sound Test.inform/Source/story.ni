@@ -156,14 +156,18 @@ The hint button is scenery in Sound Stage. The description is "This button will 
 Instead of pushing the hint button:
 	try hinting.
 
-The play simple button is scenery in Sound Stage. The description is "This button starts playing the current channel using glk_schannel_play rather than glk_schannel_play_ext, disregaring any repeats and notification settings. As the command does not support notifications, the channel will keep its 'playing' status even after it has finished."
+The simple button is scenery in Sound Stage. The description is "This button starts playing the current channel using glk_schannel_play rather than glk_schannel_play_ext, disregaring any repeats and notification settings. As the command does not support notifications, the channel will keep its 'playing' status even after it has finished."
 
-Instead of pushing the play simple button:
+The printed name of the simple button is "play simple button". Understand "play simple button/--" as the simple button.
+
+Instead of pushing the simple button:
 	try simple-playing.
 
-The stop all button is scenery in Sound Stage. The description is "This button stops all currently playing or paused sound channels immediately. It is a convenience function which has no corresponding Glk command."
+The stop-all-button is scenery in Sound Stage. The description is "This button stops all currently playing or paused sound channels immediately. It is a convenience function which has no corresponding Glk command."
 
-Instead of pushing the stop all button:
+The printed name of the stop-all-button is "stop all button". Understand "stop all button/--" as the stop-all-button.
+
+Instead of pushing the stop-all-button:
 	try all-stopping.
 
 Volume 4 - Actions
