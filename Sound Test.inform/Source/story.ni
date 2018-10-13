@@ -167,20 +167,28 @@ Book 1 - Pushing buttons
 
 Understand "play" as playing. Playing is an action applying to nothing.
 Carry out playing:
-	say "You push the play button. Sound channel [current sound channel] [if current sound channel is playing]stops playing its previous sound and [end if]begins to play the [sound-type-name of channel-sound of current sound channel] at volume [volume of current sound channel] with [repeats of current sound channel] repetitions and notification number [notification of current sound channel].";
+	say "You push the play button. [run paragraph on]";
+	let error be the result of playing (channel-sound of current sound channel) with (repeats of current sound channel) repeats and notification (notification of current sound channel);
+	if error is 0:
+		say "An error occurs! The channel did not start playing![line break]";
+		stop the action;
+	say "Sound channel [current sound channel] [if current sound channel is playing]stops playing its previous sound and [end if]begins to play the [sound-type-name of channel-sound of current sound channel] at volume [volume of current sound channel] with [repeats of current sound channel] repetitions and notification number [notification of current sound channel].";
 	if the multiplay state of current sound channel is true:
 		handle multichannel stopped;
 		now multiplay state of current sound channel is false;
 	now the current sound channel is playing;
-	play (channel-sound of current sound channel) with (repeats of current sound channel) repeats and notification (notification of current sound channel).
 
 Understand "play simple" or "simple-play" or "simple" as simple-playing. Simple-playing is an action applying to nothing. Carry out simple-playing:
-	say "You push the play simple button. Sound channel [current sound channel] [if current sound channel is playing]stops playing its previous sound and [end if]begins to play the [sound-type-name of channel-sound of current sound channel]. (As the simple play command does not support notifications, this channel will keep its 'playing' status after it has finished.)";
+	say "You push the play simple button. [run paragraph on]";
+	let error be the result of playing (channel-sound of current sound channel);
+	if error is 0:
+		say "An error occurs! The channel did not start playing![line break]";
+		stop the action;
+	say "Sound channel [current sound channel] [if current sound channel is playing]stops playing its previous sound and [end if]begins to play the [sound-type-name of channel-sound of current sound channel]. (As the simple play command does not support notifications, this channel will keep its 'playing' status after it has finished.)";
 	if the multiplay state of current sound channel is true:
 		handle multichannel stopped;
 		now multiplay state of current sound channel is false;
 	now the current sound channel is playing;
-	play (channel-sound of current sound channel).
 
 Understand "play channel/-- [number]" as channel-playing. Channel-playing is an action applying to one number. Carry out channel-playing:
 	try number-setting channel knob to the number understood;
@@ -612,7 +620,9 @@ To restore channel states:
 			stop channel id (channel id of C);
 			[say "Stopped channel [C].";]
 		otherwise if C is playing or C is paused:
-			play channel id (channel id of C) with sound (channel-sound of C) and (repeats of C) repeats and notification (notification of C);
+			let error be the result of playing channel id (channel id of C) with sound (channel-sound of C) and (repeats of C) repeats and notification (notification of C);
+			if error is 0:
+				say "Error! Failed to play channel [C].";
 			[say "Started channel [C].";]
 			if C is paused:
 				pause channel id (channel id of C);
@@ -642,14 +652,14 @@ To decide which number is the channel following (N - a number):
 To restart line input in the/-- main window:
 	(- glk_request_line_event(gg_mainwin, buffer+WORDSIZE, INPUT_BUFFER_LEN-WORDSIZE, 0); -)
 
-To play (SFX - sound name) with (R - a number) repeats/repeat and notification (N - a number):
-	(- glk_schannel_play_ext(current_channel, ResourceIDsOfSounds-->{SFX}, {R}, {N}); -).
+To decide which number is the result of playing (SFX - sound name) with (R - a number) repeats/repeat and notification (N - a number):
+	(- glk_schannel_play_ext(current_channel, ResourceIDsOfSounds-->{SFX}, {R}, {N}) -).
 
-To play channel id (C - a number) with sound (SFX - sound name) and (R - a number) repeats/repeat and notification (N - a number):
-	(- glk_schannel_play_ext({C}, ResourceIDsOfSounds-->{SFX}, {R}, {N}); -).
+To decide which number is the result of playing channel id (C - a number) with sound (SFX - sound name) and (R - a number) repeats/repeat and notification (N - a number):
+	(- glk_schannel_play_ext({C}, ResourceIDsOfSounds-->{SFX}, {R}, {N}) -).
 
-To play (SFX - sound name):
-	(- glk_schannel_play(current_channel, ResourceIDsOfSounds-->{SFX}); -).
+To decide which number is the result of playing (SFX - sound name):
+	(- glk_schannel_play(current_channel, ResourceIDsOfSounds-->{SFX}) -).
 
 To volume-adjust to (N - a number):
 	(- glk_schannel_set_volume(current_channel, {N}); -).
