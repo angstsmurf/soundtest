@@ -124,6 +124,11 @@ The pause button is scenery in Sound Stage. The description is "This button will
 Instead of pushing the pause button:
 	try pausing.
 
+The unpause button is scenery in Sound Stage. The description is "This button will resume playback of the current channel, if it is paused."
+
+Instead of pushing the unpause button:
+	try unpausing.
+
 The stop button is scenery in Sound Stage. The description is "This button will stop playback of the current channel."
 
 Instead of pushing the stop button:
@@ -225,6 +230,8 @@ Understand "stop all" as all-stopping. All-stopping is an action applying to not
 
 Understand "pause" as pausing. Pausing is an action applying to nothing.
 Carry out pausing:
+	if the pause button is not in location:
+		say "The pause button has disappeared.";
 	if current sound channel is paused:
 		say "Current sound channel is already paused.";
 		stop the action;
@@ -238,6 +245,8 @@ Understand "pause channel/-- [number]" as channel-pausing. Channel-pausing is an
 
 Understand "resume" as unpausing. Unpausing is an action applying to nothing.
 Carry out unpausing:
+	if the unpause button is not in location:
+		say "The resume button has disappeared.";
 	if current sound channel is not paused:
 		say "Current sound channel is not paused.";
 		stop the action;
@@ -271,9 +280,11 @@ Understand "simplify" as simplifying. Simplifying is an action applying to nothi
 	if the simplify button is not in location:
 		say "The simplify button has disappeared.";
 		stop the action;
-	say "The PLAY MULTI and SIMPLIFY buttons disappear in a puff of smoke along with the fade delay control. In their place a COMPLICATE button appears.";
+	say "The PLAY MULTI, PAUSE, UNPAUSE and SIMPLIFY buttons disappear in a puff of smoke along with the fade delay control. In their place a COMPLICATE button appears.";
 	now the simplify button is nowhere;
 	now the multiplay button is nowhere;
+	now the pause button is nowhere;
+	now the unpause button is nowhere;
 	now fade delay slider is nowhere;
 	now the complicate button is in location.
 
@@ -281,10 +292,12 @@ Understand "complicate" as complicating. Complicating is an action applying to n
 	if the complicate button is not in location:
 		say "The complicate button has disappeared.";
 		stop the action;
-	say "The COMPLICATE button disappears in a puff of smoke. In its place you now see a PLAY MULTI button, a fade delay control and a SIMPLIFY button.";
+	say "The COMPLICATE button disappears in a puff of smoke. In its place you now see a PLAY MULTI button, a PAUSE button, an UNPAUSE button, a fade delay control and a SIMPLIFY button.";
 	now the multiplay button is in location;
 	now the fade delay slider is in location;
 	now the simplify button is in location;
+	now the pause button is in location;
+	now the unpause button is in location;
 	now the complicate button is nowhere.
 
 Understand "hint" as hinting. Hinting is an action applying to nothing. Carry out hinting:
