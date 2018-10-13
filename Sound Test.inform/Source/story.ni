@@ -232,6 +232,7 @@ Understand "pause" as pausing. Pausing is an action applying to nothing.
 Carry out pausing:
 	if the pause button is not in location:
 		say "The pause button has disappeared.";
+		stop the action;
 	if current sound channel is paused:
 		say "Current sound channel is already paused.";
 		stop the action;
@@ -247,6 +248,7 @@ Understand "resume" as unpausing. Unpausing is an action applying to nothing.
 Carry out unpausing:
 	if the unpause button is not in location:
 		say "The resume button has disappeared.";
+		stop the action;
 	if current sound channel is not paused:
 		say "Current sound channel is not paused.";
 		stop the action;
