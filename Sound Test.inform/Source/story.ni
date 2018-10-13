@@ -170,6 +170,13 @@ The printed name of the stop-all-button is "stop all button". Understand "stop a
 Instead of pushing the stop-all-button:
 	try all-stopping.
 
+The autotest button is scenery in Sound Stage. The description is "This button starts an automated test that calls every supported sound-related Glk function."
+
+Understand "auto/automatic/automated test/-- button/--" or "test button/--" as the autotest button.
+
+Instead of pushing the autotest button:
+	try autotesting.
+
 Volume 4 - Actions
 
 Book 1 - Pushing buttons
@@ -508,6 +515,221 @@ Understand "fade out/--" as vaguely fading out. Vaguely fading out is an action 
 
 Understand "fade in/--" as vaguely fading in. Vaguely fading in is an action applying to nothing. Carry out vaguely fading in:
 		try volume-fading to 65536 instead.
+
+Book 6 - Automatic testing
+
+Understand "autotest" or "auto test/--" or "automated test/--" as autotesting. Autotesting is an action applying to nothing. Carry out autotesting:
+	autotest.
+
+To autotest:
+	(- Autotest(); -).
+
+Include (-
+
+[ Autotest res chan chan2 chan3 rockptr biggest_rock;
+
+	print "Running automated tests.^";
+
+	res = glk_gestalt(gestalt_Sound2, 0);
+
+	print "^glk_gestalt(gestalt_Sound2, 0): ";
+
+	if (res)
+		print "This interpreter claims to support ALL sound functions. This means that all the following gestalt function calls should return true as well.^";
+	else
+		print "This interpreter claims to NOT support all sound functions.^";
+
+	print "^glk_gestalt(gestalt_Sound, 0): ";
+
+	if (glk_gestalt(gestalt_Sound, 0))
+	{
+		print "This interpreter claims to support the basic set of sound functions.^";
+	}
+	else
+	{
+		if (res)
+			print "Error! This interpreter claims to support all sound functions, but also claims to NOT support the basic set of sound functions.^";
+		else
+			print "This interpreter claims to NOT support the basic set of sound functions.^";
+	}
+
+	print "^glk_gestalt(gestalt_SoundMusic, 0): ";
+
+	if (glk_gestalt(gestalt_SoundMusic, 0))
+	{
+		print "This interpreter claims to support playing MOD songs.^";
+	}
+	else
+	{
+		if (res)
+			print "Error! This interpreter claims to support all sound functions, but also claims to NOT support playing MOD songs.^";
+		else
+			print "This interpreter claims to NOT support playing MOD songs.^";
+	}
+
+	print "^glk_gestalt(gestalt_SoundVolume, 0): ";
+
+	if (glk_gestalt(gestalt_SoundVolume, 0))
+	{
+		print "This interpreter claims to support the glk_schannel_set_volume() function.^";
+	}
+	else
+	{
+		if (res)
+			print "Error! This interpreter claims to support all sound functions, but also claims to NOT support the glk_schannel_set_volume() function.^";
+		else
+			print "This interpreter claims to NOT support the glk_schannel_set_volume() function.^";
+	}
+
+	print "^glk_gestalt(gestalt_SoundNotify, 0): ";
+
+	if (glk_gestalt(gestalt_SoundNotify, 0))
+	{
+		print "This interpreter claims to support sound notification events.^";
+	}
+	else
+	{
+		if (res)
+			print "Error! This interpreter claims to support all sound functions, but also claims to NOT support sound notification events.^";
+		else
+			print "This interpreter claims to NOT support sound notification events.^";
+	}
+
+	print "^^First, we try to find the last sound channel using glk_schannel_iterate().^";
+
+	chan = glk_schannel_iterate(0, biggest_rock);
+
+	if (~~chan)
+	{
+		print "^Error! No sound channels found.^";
+		biggest_rock = GG_BACKGROUNDCHAN_ROCK;
+	}
+	else
+		while (chan)
+		{
+			chan = glk_schannel_iterate(chan, rockptr);
+			if (rockptr > biggest_rock)
+				biggest_rock = rockptr;
+		}
+
+	print "^Next, we try create three new channels with rock numbers above the one we found.^";
+
+	biggest_rock = biggest_rock +1;
+
+	chan = glk_schannel_create(biggest_rock);
+
+	if (~~chan)
+	{
+		print "^Error! Could not create a new channel. Bailing out!^";
+		rfalse;
+	}
+
+	chan2 = glk_schannel_create(biggest_rock + 1);
+
+	if (~~chan2)
+	{
+		print "^Error! Could not create a new channel. Bailing out!^";
+		rfalse;
+	}
+
+	chan3 = glk_schannel_create(biggest_rock + 2);
+
+	if (~~chan3)
+	{
+		print "^Error! Could not create a new channel. Bailing out!^";
+		rfalse;
+	}
+
+	if (glk_schannel_get_rock(chan) == biggest_rock)
+		print "^glk_schannel_get_rock() returned the expected result.^";
+	else
+		print "^Error! glk_schannel_get_rock() did not return the expected result!^";
+
+	glk_sound_load_hint(ResourceIDsOfSounds-->(+ sound of AIFF +), 1);
+	glk_sound_load_hint(ResourceIDsOfSounds-->(+ sound of MOD +), 1);
+	glk_sound_load_hint(ResourceIDsOfSounds-->(+ sound of OGG +), 1);
+
+	print "^Called glk_sound_load_hint() three times to give the library a hint that each of the three sound types should be loaded.^";
+
+	glk_schannel_play(chan, ResourceIDsOfSounds-->(+ sound of AIFF +));
+	glk_schannel_set_volume(chan, $8000);
+	glk_schannel_play(chan, ResourceIDsOfSounds-->(+ sound of AIFF +));
+	glk_schannel_play_ext(chan, ResourceIDsOfSounds-->(+ sound of OGG +), -1, 1);
+	glk_schannel_play(chan2, ResourceIDsOfSounds-->(+ sound of OGG +));
+	glk_schannel_play_ext(chan2, ResourceIDsOfSounds-->(+ sound of AIFF +), 0, 2);
+	glk_schannel_set_volume(chan2, $8000);
+	glk_schannel_stop(chan2);
+	if (glk_gestalt(gestalt_SoundMusic, 0))
+	{
+		glk_schannel_play(chan3, ResourceIDsOfSounds-->(+ sound of MOD +));
+		glk_schannel_set_volume(chan3, $8000);
+		glk_schannel_play_ext(chan3, ResourceIDsOfSounds-->(+ sound of OGG +), 2, 3);
+		glk_schannel_destroy(chan3);
+		print "^Called glk_schannel_play() with three different channels and three different sound types.^";
+	}
+
+	glk_schannel_destroy(chan);
+	glk_schannel_destroy(chan2);
+
+	print "^Then we called glk_schannel_set_volume(),  glk_schannel_play_ext(),  glk_schannel_stop() and glk_schannel_destroy() on them.^";
+
+	print "^This concludes the basic sound test.^^";
+];
+
+[ Advanced_autotest res chan chan2 chan3 rockptr biggest_rock;
+
+	print "Running extended sound test.^";
+
+	chan = glk_schannel_iterate(0, biggest_rock);
+
+	if (~~chan)
+	{
+		print "^Error! No sound channels found.^";
+		biggest_rock = GG_BACKGROUNDCHAN_ROCK;
+	}
+	else
+		while (chan)
+		{
+			chan = glk_schannel_iterate(chan, rockptr);
+			if (rockptr > biggest_rock)
+				biggest_rock = rockptr;
+		}
+
+	print "^Again, we try create three new channels.^";
+
+	biggest_rock = biggest_rock +1;
+
+	chan = glk_schannel_create_ext(biggest_rock, $8000);
+
+	if (~~chan)
+	{
+		print "^Error! Could not create a new channel. Bailing out!^";
+		rfalse;
+	}
+
+	chan2 = glk_schannel_create_ext(biggest_rock + 1, 0);
+
+	if (~~chan2)
+	{
+		print "^Error! Could not create a new channel. Bailing out!^";
+		rfalse;
+	}
+
+	chan3 = glk_schannel_create_ext(biggest_rock + 2, $C000);
+
+	if (~~chan3)
+	{
+		print "^Error! Could not create a new channel. Bailing out!^";
+		rfalse;
+	}
+
+
+!    { 0x00F7, glk_schannel_play_multi, "schannel_play_multi" },
+!    { 0x00FD, glk_schannel_set_volume_ext, "schannel_set_volume_ext" },
+!  { 0x00FE, glk_schannel_pause, "schannel_pause" },
+!   { 0x00FF, glk_schannel_unpause, "schannel_unpause" },
+];
+-).
 
 Volume 5 - Describing the room
 
