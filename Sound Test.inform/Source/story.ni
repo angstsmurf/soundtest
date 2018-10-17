@@ -471,13 +471,6 @@ Understand the command "turn" as "set".
 
 Book 5 - Convenience actions, looping and fading
 
-Understand "examine controls" or "look at/-- controls" as listing controls. Listing controls is an action applying to nothing. Carry out listing controls:
-	let L be a list of things;
-	repeat with item running through things in location:
-		unless item is player or item is large display:
-			add item to L;
-	say "You can se [L with indefinite articles].[paragraph break][bracket]You can get more information about individual controls by examining them.[close bracket][line break]"
-
 Understand "set volume to max" or "max volume" as volume-maxing. Volume-maxing is an action applying to nothing. Carry out volume-maxing:
 	try number-setting the volume slider to 65536.
 
@@ -765,6 +758,13 @@ To say playing-channels-list:
 		say "[L][if multiplay channels remaining is greater than 1]. [bracket]Channels that are part of a play multi command will be listed as playing even if they have finished[close bracket][end if]";
 	otherwise:
 		say "none".
+
+Understand "examine controls" or "look at/-- controls" as listing controls. Listing controls is an action applying to nothing. Carry out listing controls:
+	let L be a list of things;
+	repeat with item running through things in location:
+		unless item is player or item is large display:
+			add item to L;
+	say "You can se [L with indefinite articles].[paragraph break][bracket]You can get more information about individual controls by examining them.[close bracket][line break]"
 
 Volume 6 - Handle sound notifications
 
