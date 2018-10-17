@@ -474,6 +474,9 @@ Book 5 - Convenience actions, looping and fading
 Understand "set volume to max" or "max volume" as volume-maxing. Volume-maxing is an action applying to nothing. Carry out volume-maxing:
 	try number-setting the volume slider to 65536.
 
+Understand "set volume to half" or "half volume" as volume-halfing. Volume-halfing is an action applying to nothing. Carry out volume-halfing:
+	try number-setting the volume slider to 32768.
+
 Understand "[number]" or "channel [number]" or "sound channel [number]" as channelling. Channelling is an action applying to one number. Carry out channelling:
 	try number-setting the channel knob to the number understood.
 
