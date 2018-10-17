@@ -521,221 +521,6 @@ Understand "fade out/--" as vaguely fading out. Vaguely fading out is an action 
 Understand "fade in/--" as vaguely fading in. Vaguely fading in is an action applying to nothing. Carry out vaguely fading in:
 		try volume-fading to 65536 instead.
 
-Book 6 - Automatic testing
-
-Understand "autotest" or "auto test/--" or "automated test/--" as autotesting. Autotesting is an action applying to nothing. Carry out autotesting:
-	autotest.
-
-To autotest:
-	(- Autotest(); -).
-
-Include (-
-
-[ Autotest res chan chan2 chan3 rockptr biggest_rock;
-
-	print "Running automated tests.^";
-
-	res = glk_gestalt(gestalt_Sound2, 0);
-
-	print "^glk_gestalt(gestalt_Sound2, 0): ";
-
-	if (res)
-		print "This interpreter claims to support ALL sound functions. This means that all the following gestalt function calls should return true as well.^";
-	else
-		print "This interpreter claims to NOT support all sound functions.^";
-
-	print "^glk_gestalt(gestalt_Sound, 0): ";
-
-	if (glk_gestalt(gestalt_Sound, 0))
-	{
-		print "This interpreter claims to support the basic set of sound functions.^";
-	}
-	else
-	{
-		if (res)
-			print "Error! This interpreter claims to support all sound functions, but also claims to NOT support the basic set of sound functions.^";
-		else
-			print "This interpreter claims to NOT support the basic set of sound functions.^";
-	}
-
-	print "^glk_gestalt(gestalt_SoundMusic, 0): ";
-
-	if (glk_gestalt(gestalt_SoundMusic, 0))
-	{
-		print "This interpreter claims to support playing MOD songs.^";
-	}
-	else
-	{
-		if (res)
-			print "Error! This interpreter claims to support all sound functions, but also claims to NOT support playing MOD songs.^";
-		else
-			print "This interpreter claims to NOT support playing MOD songs.^";
-	}
-
-	print "^glk_gestalt(gestalt_SoundVolume, 0): ";
-
-	if (glk_gestalt(gestalt_SoundVolume, 0))
-	{
-		print "This interpreter claims to support the glk_schannel_set_volume() function.^";
-	}
-	else
-	{
-		if (res)
-			print "Error! This interpreter claims to support all sound functions, but also claims to NOT support the glk_schannel_set_volume() function.^";
-		else
-			print "This interpreter claims to NOT support the glk_schannel_set_volume() function.^";
-	}
-
-	print "^glk_gestalt(gestalt_SoundNotify, 0): ";
-
-	if (glk_gestalt(gestalt_SoundNotify, 0))
-	{
-		print "This interpreter claims to support sound notification events.^";
-	}
-	else
-	{
-		if (res)
-			print "Error! This interpreter claims to support all sound functions, but also claims to NOT support sound notification events.^";
-		else
-			print "This interpreter claims to NOT support sound notification events.^";
-	}
-
-	print "^^First, we try to find the last sound channel using glk_schannel_iterate().^";
-
-	chan = glk_schannel_iterate(0, biggest_rock);
-
-	if (~~chan)
-	{
-		print "^Error! No sound channels found.^";
-		biggest_rock = GG_BACKGROUNDCHAN_ROCK;
-	}
-	else
-		while (chan)
-		{
-			chan = glk_schannel_iterate(chan, rockptr);
-			if (rockptr > biggest_rock)
-				biggest_rock = rockptr;
-		}
-
-	print "^Next, we try create three new channels with rock numbers above the one we found.^";
-
-	biggest_rock = biggest_rock +1;
-
-	chan = glk_schannel_create(biggest_rock);
-
-	if (~~chan)
-	{
-		print "^Error! Could not create a new channel. Bailing out!^";
-		rfalse;
-	}
-
-	chan2 = glk_schannel_create(biggest_rock + 1);
-
-	if (~~chan2)
-	{
-		print "^Error! Could not create a new channel. Bailing out!^";
-		rfalse;
-	}
-
-	chan3 = glk_schannel_create(biggest_rock + 2);
-
-	if (~~chan3)
-	{
-		print "^Error! Could not create a new channel. Bailing out!^";
-		rfalse;
-	}
-
-	if (glk_schannel_get_rock(chan) == biggest_rock)
-		print "^glk_schannel_get_rock() returned the expected result.^";
-	else
-		print "^Error! glk_schannel_get_rock() did not return the expected result!^";
-
-	glk_sound_load_hint(ResourceIDsOfSounds-->(+ sound of AIFF +), 1);
-	glk_sound_load_hint(ResourceIDsOfSounds-->(+ sound of MOD +), 1);
-	glk_sound_load_hint(ResourceIDsOfSounds-->(+ sound of OGG +), 1);
-
-	print "^Called glk_sound_load_hint() three times to give the library a hint that each of the three sound types should be loaded.^";
-
-	glk_schannel_play(chan, ResourceIDsOfSounds-->(+ sound of AIFF +));
-	glk_schannel_set_volume(chan, $8000);
-	glk_schannel_play(chan, ResourceIDsOfSounds-->(+ sound of AIFF +));
-	glk_schannel_play_ext(chan, ResourceIDsOfSounds-->(+ sound of OGG +), -1, 1);
-	glk_schannel_play(chan2, ResourceIDsOfSounds-->(+ sound of OGG +));
-	glk_schannel_play_ext(chan2, ResourceIDsOfSounds-->(+ sound of AIFF +), 0, 2);
-	glk_schannel_set_volume(chan2, $8000);
-	glk_schannel_stop(chan2);
-	if (glk_gestalt(gestalt_SoundMusic, 0))
-	{
-		glk_schannel_play(chan3, ResourceIDsOfSounds-->(+ sound of MOD +));
-		glk_schannel_set_volume(chan3, $8000);
-		glk_schannel_play_ext(chan3, ResourceIDsOfSounds-->(+ sound of OGG +), 2, 3);
-		glk_schannel_destroy(chan3);
-		print "^Called glk_schannel_play() with three different channels and three different sound types.^";
-	}
-
-	glk_schannel_destroy(chan);
-	glk_schannel_destroy(chan2);
-
-	print "^Then we called glk_schannel_set_volume(),  glk_schannel_play_ext(),  glk_schannel_stop() and glk_schannel_destroy() on them.^";
-
-	print "^This concludes the basic sound test.^^";
-];
-
-[ Advanced_autotest res chan chan2 chan3 rockptr biggest_rock;
-
-	print "Running extended sound test.^";
-
-	chan = glk_schannel_iterate(0, biggest_rock);
-
-	if (~~chan)
-	{
-		print "^Error! No sound channels found.^";
-		biggest_rock = GG_BACKGROUNDCHAN_ROCK;
-	}
-	else
-		while (chan)
-		{
-			chan = glk_schannel_iterate(chan, rockptr);
-			if (rockptr > biggest_rock)
-				biggest_rock = rockptr;
-		}
-
-	print "^Again, we try create three new channels.^";
-
-	biggest_rock = biggest_rock +1;
-
-	chan = glk_schannel_create_ext(biggest_rock, $8000);
-
-	if (~~chan)
-	{
-		print "^Error! Could not create a new channel. Bailing out!^";
-		rfalse;
-	}
-
-	chan2 = glk_schannel_create_ext(biggest_rock + 1, 0);
-
-	if (~~chan2)
-	{
-		print "^Error! Could not create a new channel. Bailing out!^";
-		rfalse;
-	}
-
-	chan3 = glk_schannel_create_ext(biggest_rock + 2, $C000);
-
-	if (~~chan3)
-	{
-		print "^Error! Could not create a new channel. Bailing out!^";
-		rfalse;
-	}
-
-
-!    { 0x00F7, glk_schannel_play_multi, "schannel_play_multi" },
-!    { 0x00FD, glk_schannel_set_volume_ext, "schannel_set_volume_ext" },
-!  { 0x00FE, glk_schannel_pause, "schannel_pause" },
-!   { 0x00FF, glk_schannel_unpause, "schannel_unpause" },
-];
--).
-
 Volume 5 - Describing the room
 
 The description of the Sound Stage is "This is a mixer room full of different controls. Most prominent is a large PLAY button, accompanied by the usual PAUSE and STOP buttons, and a volume control. There is also a switch for sound type (set to play [sound-type-name of the channel-sound of current sound channel]), and another one to change the sound channel, currently set to [index of current sound channel].[paragraph break]Furthermore, you notice a DESTROY button, a HINT button, [if the simplify button is in location]a SIMPLIFY button, a PLAY MULTI button and a fade delay control[otherwise]and a COMPLICATE button[end if]. You can get a full list of all available controls by typing EXAMINE CONTROLS."
@@ -772,17 +557,25 @@ Understand "examine controls" or "look at/-- controls" as listing controls. List
 Volume 6 - Handle sound notifications
 
 Glulx input handling rule for a volume-event:
-	cancel line input in the main window;
+	if test-running is true:
+		handle test volume notification glk event value 2;
+		the rule succeeds;
+	cancel line input in the main window, preserving keystrokes;
 	say "[bracket]Volume notification: A volume change was completed on channel [glk event value 2].[close bracket][line break]>";
 	restart line input in the main window.
 
 Glulx input handling rule for a sound-notify-event:
-	cancel line input in the main window;
+	if test-running is true:
+		handle test sound notification glk event value 2;
+		the rule succeeds;
+	cancel line input in the main window, preserving keystrokes;
+	unless glk sound notification is supported:
+		say "[bracket]This interpreter claims to not support sound notifications, so something must be wrong.[close bracket][line break]";
 	let N be glk event value 2;
 	if N is multinotification:
 		handle multichannel stopped;
 	otherwise:
-		say "[bracket]Sound notification: A sound finished playing on channel [N].[close bracket][line break]>";
+		say "[bracket]Sound notification: A sound finished playing on channel [N].[close bracket][paragraph break]>";
 		let C be the chan in row N of the Table of Sound-Channels;
 		now C is stopped;
 	restart line input in the main window.
@@ -806,7 +599,9 @@ First when play begins:
 When play begins:
 	check for unsupported features;
 	let N be 1;
-	let R be -1 + the rock of channel id (foreground channel id);
+	let R be 409;
+	if foreground channel id is not 0:
+		now R is -1 + the rock of channel id (foreground channel id);
 	repeat with S running through sound channels:
 		choose row N from the Table of Sound-Channels;
 		now the chan entry is S;
@@ -908,9 +703,6 @@ To decide which number is the rock of channel id (N - a number):
 To decide which number is the channel following (N - a number):
 	(- glk_schannel_iterate({N}, 0) -).
 
-To restart line input in the/-- main window:
-	(- glk_request_line_event(gg_mainwin, buffer+WORDSIZE, INPUT_BUFFER_LEN-WORDSIZE, 0); -)
-
 To decide which number is the result of playing (SFX - sound name) with (R - a number) repeats/repeat and notification (N - a number):
 	(- glk_schannel_play_ext(current_channel, ResourceIDsOfSounds-->{SFX}, {R}, {N}) -).
 
@@ -978,3 +770,945 @@ Include (-
 ];
 
 -).
+
+Volume 9 - Automatic testing
+
+Understand "autotest" or "auto test/--" or "automated test/--" as autotesting. Autotesting is an action applying to nothing. Carry out autotesting:
+	autotest.
+
+To autotest:
+	(- Autotest(); -).
+
+Test me with "autotest".
+
+Section 1 - Individual test commands
+
+Understand "advanced" as fulltesting. Fulltesting is an action applying to nothing. Carry out fulltesting:
+	advance.
+
+To advance:
+	(- Auto_initialize(); if (Advanced_autotest()) print "^"; Auto_uninitialize(); -).
+
+Test advanced with "advanced".
+
+Understand "volumetest" as volumetesting. Volumetesting is an action applying to nothing. Carry out volumetesting:
+	volumetest.
+
+To volumetest:
+	(- Auto_initialize(); if (Volume_test()) print "^"; Auto_uninitialize(); -).
+
+Test volume with "volumetest".
+
+Understand "modtest" as modtesting. Modtesting is an action applying to nothing. Carry out modtesting:
+	modtest.
+
+To modtest:
+	(- Auto_initialize(); if (MOD_test()) print "^"; Auto_uninitialize(); -).
+
+Test mod with "modtest".
+
+Understand "notifytest" as notifytesting. Notifytesting is an action applying to nothing. Carry out notifytesting:
+	notifytest.
+
+To notifytest:
+	(- Auto_initialize(); if (Notify_test()) print "^"; Auto_uninitialize(); -).
+
+Test notify with "notifytest".
+
+Understand "multitest" as multitesting. Multitesting is an action applying to nothing. Carry out multitesting:
+	multitest.
+
+To multitest:
+	(- Auto_initialize(); if (Play_multi_test()) print "^"; Auto_uninitialize(); -).
+
+Test multi with "multitest".
+
+Understand "fadetest" as fadetesting. Fadetesting is an action applying to nothing. Carry out fadetesting:
+	fadetest.
+
+To fadetest:
+	(- Auto_initialize(); if (Volume_change_duration_test()) print "^"; Auto_uninitialize(); -).
+
+Test fade with "fadetest".
+
+
+Section 2 - Inform 6 stuff
+
+
+Test-running is a truth state that varies. The test-running variable translates into I6 as "running_test".
+
+Include (-
+
+Global running_test = 0;
+Global notify_expected = 0;
+
+Array tchan --> 4;
+Array expected_notifys --> 4;
+
+-) after "Definitions.i6t".
+
+To handle test volume notification (N - a number):
+	(- handle_test_volume_notification({N}); -).
+
+To handle test sound notification (N - a number):
+	(- handle_test_sound_notification({N}); -).
+
+
+Include (-
+
+[ Auto_initialize chan biggest_rock rockptr i;
+
+	Stop_all_channels();
+	Auto_uninitialize();
+
+	running_test = 1;
+
+	!First, we try to find the sound channel with greatest rock.
+
+	chan = glk_schannel_iterate(0, biggest_rock);
+
+	if (~~chan)
+	{
+		print "^Error! No sound channels found.^";
+		biggest_rock = GG_BACKGROUNDCHAN_ROCK;
+	}
+	else
+		while (chan)
+		{
+			chan = glk_schannel_iterate(chan, rockptr);
+
+			if (rockptr > biggest_rock)
+				biggest_rock = rockptr;
+		}
+
+	! Next, we try create four new channels with rock numbers above the one we found.
+
+	biggest_rock = biggest_rock +1;
+
+	for ( i = 0 : i < 4 : i++ )
+	{
+
+		tchan --> i = glk_schannel_create(biggest_rock + i);
+
+		if (~~(tchan --> i))
+		{
+			print "^Error! Could not create test channel ", i, ". Continue anyway?^>>";
+			if (YesOrNo()==0) rfalse;
+		}
+	}
+
+	rtrue;
+];
+
+[ Auto_uninitialize chan lastchan i;
+
+	notify_expected = 0;
+
+	for ( i = 0 : i < 4 : i++ ) expected_notifys --> i = 0;
+
+	chan = glk_schannel_iterate(0, 0);
+
+	if (~~chan)
+	{
+		! No sound channels exist, nothing to do
+		rfalse;
+	}
+	else
+		while (chan)
+		{
+			lastchan = chan;
+			chan = glk_schannel_iterate(chan, 0);
+
+			for ( i = 0 : i < 4 : i++ )
+			{
+				if (lastchan == tchan --> i)
+				{
+					glk_schannel_destroy(tchan --> i);
+				}
+
+			}
+		}
+
+		for ( i = 0 : i < 4 : i++ ) tchan --> i = GLK_NULL;
+
+		running_test = 0;
+];
+
+[ Autotest ;
+
+	Auto_initialize();
+
+	if (~~Basic_autotest())
+	{
+		Auto_uninitialize();
+		rfalse;
+	}
+
+	if (glk_gestalt(gestalt_Sound2, 0))
+		Advanced_autotest();
+
+	Auto_uninitialize();
+	rfalse;
+];
+
+[ Basic_autotest res;
+
+	print "Running automatic test suite.^";
+
+	res = glk_gestalt(gestalt_Sound2, 0);
+
+	print "^glk_gestalt(gestalt_Sound2, 0)^";
+
+	if (res)
+		print "This interpreter claims to support ALL sound functions. This means that all the following gestalt function calls should return true as well.^";
+	else
+		print "This interpreter claims to NOT support all sound functions.^";
+
+	print "^glk_gestalt(gestalt_Sound, 0)^";
+
+	if (glk_gestalt(gestalt_Sound, 0))
+	{
+		print "This interpreter claims to support the basic set of sound functions.^";
+	}
+	else
+	{
+		if (res)
+			print "Error! This interpreter claims to support all sound functions, but also claims to NOT support the basic set of sound functions.^";
+		else
+			print "This interpreter claims to NOT support the basic set of sound functions.^";
+	}
+
+	print "^glk_gestalt(gestalt_SoundMusic, 0)^";
+
+	if (glk_gestalt(gestalt_SoundMusic, 0))
+	{
+		print "This interpreter claims to support playing MOD songs.^";
+	}
+	else
+	{
+		if (res)
+			print "Error! This interpreter claims to support all sound functions, but also claims to NOT support playing MOD songs.^";
+		else
+			print "This interpreter claims to NOT support playing MOD songs.^";
+	}
+
+	print "^glk_gestalt(gestalt_SoundVolume, 0)^";
+
+	if (glk_gestalt(gestalt_SoundVolume, 0))
+	{
+		print "This interpreter claims to support the glk_schannel_set_volume() function.^";
+	}
+	else
+	{
+		if (res)
+			print "Error! This interpreter claims to support all sound functions, but also claims to NOT support the glk_schannel_set_volume() function.^";
+		else
+			print "This interpreter claims to NOT support the glk_schannel_set_volume() function.^";
+	}
+
+	print "^glk_gestalt(gestalt_SoundNotify, 0)^";
+
+	if (glk_gestalt(gestalt_SoundNotify, 0))
+	{
+		print "This interpreter claims to support sound notification events.^";
+	}
+	else
+	{
+		if (res)
+			print "Error! This interpreter claims to support all sound functions, but also claims to NOT support sound notification events.^";
+		else
+			print "This interpreter claims to NOT support sound notification events.^";
+	}
+
+	print "^Press any key except escape to start the basic sound test, or escape to cancel test suite.^[Any time you are told to press any key during these tests, escape will cancel the entire test suite.]^";
+
+	Auto_initialize();
+
+	if (MyPause() == -8) rfalse; ! Wait for key, bail if user pressed escape
+
+	glk_sound_load_hint(ResourceIDsOfSounds-->(+ sound of AIFF +), 1);
+	glk_sound_load_hint(ResourceIDsOfSounds-->(+ sound of MOD +), 1);
+	glk_sound_load_hint(ResourceIDsOfSounds-->(+ sound of OGG +), 1);
+
+	print "^Called glk_sound_load_hint() three times to give the library a hint that each of the three sound types should be loaded.^";
+
+	if (~~glk_schannel_play(tchan --> 0, ResourceIDsOfSounds-->(+ sound of OGG +)))
+		print "^Error! Could not start the OGG on the first channel with glk_schannel_play()!";
+	else
+		print "^Started playing the first channel using glk_schannel_play(). You should now be hearing the OGG play.";
+
+	print "^^Press any key to continue.";
+
+	if (MyPause() == -8) rfalse; ! Wait for key, bail if user pressed escape
+
+	if (~~glk_schannel_play_ext(tchan --> 1, ResourceIDsOfSounds-->(+ sound of AIFF +), 1, 2))
+		print "^^Error! Could not start the AIFF on the second channel with glk_schannel_play_ext()!";
+	else
+	{
+		print "^^Started playing the second channel. You should now be hearing the AIFF. Unless you waited long enought for the OGG to finish, you should also still be hearing the OGG.";
+
+		if (glk_gestalt(gestalt_SoundNotify, 0))
+		{
+			print "^^When the AIFF stops playing, a sound notification message should be printed ([Sound notification 2.]). Not if you press a button before it has finished, though.";
+			notify_expected = 1;
+			expected_notifys --> 0 = 2;
+		}
+	}
+
+	print "^^Press any key to continue.";
+
+	if (MyPause() == -8) rfalse;
+
+	notify_expected = 0;
+
+	if (~~glk_schannel_play_ext(tchan --> 3, ResourceIDsOfSounds-->(+ sound of OGG +), 1, 2))
+		print "^Error: could not start OGG on the third channel with glk_schannel_play_ext().^";
+	else
+	{
+		glk_schannel_stop(tchan --> 3);
+		print "^Started a sound on another channel and immediately stopped it with glk_schannel_stop(). You should be hearing nothing.^";
+	}
+
+	Auto_initialize();
+
+	if (~~Volume_test()) rfalse;
+
+	Auto_initialize();
+
+	if (~~MOD_test()) rfalse;
+
+	print "^";
+
+	Auto_initialize();
+
+	if (~~Notify_test()) rfalse;
+
+	Auto_uninitialize();
+
+	print "^This concludes the basic sound test.^^";
+	rtrue;
+];
+
+[ Advanced_autotest;
+
+	if (~~glk_gestalt(gestalt_Sound2, 0))
+	{
+		print "This interpreter claims to not support the Glk sound functions used in this test. ";
+		print "Do you want to try running it anyway?^>>";
+		if (YesOrNo()==0) rfalse;
+	}
+
+	print "^Running extended automated sound test suite.^";
+
+	Auto_initialize();
+
+	if (~~Play_multi_test()) rfalse;
+
+	Auto_initialize();
+
+	print "^";
+
+	if (~~Volume_change_duration_test()) rfalse;
+
+	Auto_uninitialize();
+
+	print "^This concludes the test suite.^^";
+
+	rtrue;
+];
+
+[ Volume_test chan chan2;
+
+	if (~~glk_gestalt(gestalt_SoundVolume, 0))
+	{
+		print "^This interpreter does not support glk_schannel_set_volume(). ";
+		print "Do you want to run this test anyway?^>>";
+		if (YesOrNo()==0) rfalse;
+	}
+
+	chan = tchan --> 0;
+	chan2 = tchan --> 1;
+
+	print "^Press any key to start the basic volume test.";
+
+	if (MyPause() == -8) rfalse;
+
+	glk_schannel_play_ext(chan, ResourceIDsOfSounds-->(+ sound of AIFF +), -1, 1);
+
+	print "^^You should now be hearing the AIFF sound playing at full volume. Press any key to lower the volume.";
+
+	if (MyPause() == -8) rfalse;
+
+	print "^^Now the volume of the AIFF should have changed to three-quarters  volume. Press any key to continue.";
+
+	glk_schannel_set_volume(chan, $C000);
+
+	if (MyPause() == -8) rfalse;
+
+	print "^^Now the volume of the AIFF should have changed to half volume. Press any key to continue.";
+
+	glk_schannel_set_volume(chan, $8000);
+
+	if (MyPause() == -8) rfalse;
+
+	print "^^Now the volume of the AIFF should have changed to 0, so no sound should be heard.^^Press any key to continue.";
+
+	glk_schannel_set_volume(chan, 0);
+	glk_schannel_set_volume(chan2, 0);
+	glk_schannel_play_ext(chan2, ResourceIDsOfSounds-->(+ sound of OGG +), -1, 1);
+
+	if (MyPause() == -8) rfalse;
+
+	print "^^Now the AIFF should be playing at full volume, along with an OGG at half volume. Press any key to continue.";
+
+	glk_schannel_set_volume(chan, $10000);
+	glk_schannel_set_volume(chan2, $8000);
+
+	if (MyPause() == -8) rfalse;
+
+	print "^^Now both sounds should be playing at full volume. Press any key to conclude the test.";
+
+	glk_schannel_set_volume(chan2, $10000);
+
+	if (MyPause() == -8) rfalse;
+
+	print "^";
+
+	rtrue;
+];
+
+[ MOD_test ;
+
+	if (~~glk_gestalt(gestalt_SoundMusic, 0))
+	{
+		print "^This interpreter does not support MOD music. ";
+		print "Do you want to run this test anyway?^>>";
+		if (YesOrNo() == 0) rtrue;
+	}
+
+	print "^Press any key to begin the MOD test.";
+
+	if (MyPause() == -8) rfalse;
+
+	if (~~glk_schannel_play_ext(tchan --> 0, ResourceIDsOfSounds-->(+ sound of MOD +), -1, 1))
+	{
+		print "^^Error! Could not play MOD";
+		if (glk_gestalt(gestalt_SoundMusic, 0))
+			print ", contrary to what this interpreter claims";
+		print ". Test will now exit.";
+		Auto_uninitialize();
+		rtrue;
+	}
+	else
+		print "^^You should now be hearing the MOD sound playing.";
+
+	print "^^Press any key to continue.";
+
+	if (MyPause() == -8) rfalse;
+
+	if (~~glk_schannel_play_ext(tchan --> 1, ResourceIDsOfSounds-->(+ sound of MOD +), -1, 1))
+	{
+		print "^^Failed to start another MOD on the second channel. That probably means that this interpreter only supports playing one MOD at a time.";
+	}
+	else
+		print "^^Started another MOD sound on the second channel.";
+
+	print "^^Press any key to continue.";
+
+	if (MyPause() == -8) rfalse;
+
+	if (~~glk_schannel_play_ext( tchan --> 2, ResourceIDsOfSounds-->(+ sound of MOD +), -1, 1))
+		print "^^Failed to start third MOD on the third channel. That probably means that this interpreter only supports playing one MOD at a time.";
+	else
+		print "^^Started a third MOD sound on the third channel.";
+
+	print "^^Press any key to conclude to MOD test.";
+
+	if (MyPause() == -8) rfalse;
+
+	print "^";
+
+	rtrue;
+];
+
+[ Notify_test;
+
+	if (~~glk_gestalt(gestalt_SoundNotify, 0))
+	{
+		print "^This interpreter does not support sound notifications. ";
+		print "Do you want to run this test anyway?^>>";
+		if (YesOrNo() == 0) rfalse;
+		print "^";
+	}
+
+	print "Press any key to begin the notification test.";
+
+	if (MyPause() == -8) rfalse;
+
+	glk_schannel_play_ext( tchan --> 0, ResourceIDsOfSounds-->(+ sound of AIFF +), 1, 1);
+	glk_schannel_play_ext( tchan --> 1, ResourceIDsOfSounds-->(+ sound of AIFF +), 1, 2);
+	glk_schannel_play_ext( tchan --> 2, ResourceIDsOfSounds-->(+ sound of AIFF +), 1, 3);
+
+	print "^^Now playing three AIFF sounds on three different channels. If you wait for them to finish, you should get three sound notifications.^";
+
+	notify_expected = 1;
+	expected_notifys --> 0 = 1;
+	expected_notifys --> 1 = 2;
+	expected_notifys --> 2 = 3;
+
+	print "^Press any key to continue.";
+
+	if (MyPause() == -8) rfalse;
+
+	notify_expected = 0;
+	expected_notifys --> 0 = 0;
+	expected_notifys --> 1 = 0;
+	expected_notifys --> 2 = 0;
+
+	glk_schannel_play_ext( tchan --> 0, ResourceIDsOfSounds-->(+ sound of AIFF +), 1, 1);
+
+	glk_schannel_stop(tchan --> 0);
+
+	glk_schannel_play_ext( tchan --> 1, ResourceIDsOfSounds-->(+ sound of AIFF +), 1, 2);
+
+	! Interrupting channel tchan --> 1 with a new sound
+	glk_schannel_play_ext( tchan --> 1, ResourceIDsOfSounds-->(+ sound of AIFF +), 1, 0);
+
+	glk_schannel_play_ext( tchan --> 2, ResourceIDsOfSounds-->(+ sound of AIFF +), 1, 3);
+
+	glk_schannel_destroy(tchan --> 2);
+
+	print "^Again playing three AIFF sounds on three channels. This time there should be no notifications.";
+
+	print "^^Press any key to conclude the notification test.";
+
+	if (MyPause() == -8) rfalse;
+
+	print "^";
+
+	rtrue;
+];
+
+[ Play_multi_test res;
+
+	if (~~glk_gestalt(gestalt_Sound2, 0))
+	{
+		print "^This interpreter does not support the glk_schannel_play_multi() function. ";
+		print "Do you want to run this test anyway?^>>";
+		if (YesOrNo() == 0) rfalse;
+	}
+
+	print "^Press any key to begin the play multi test.";
+
+	if (MyPause() == -8) rfalse;
+
+	notify_expected = 1;
+
+	expected_notifys --> 0 = 1;
+	expected_notifys --> 1 = 1;
+
+	multi_chanarray --> 0 = tchan --> 0;
+	multi_chanarray --> 1 = tchan --> 1;
+
+	multi_soundarray --> 0 = ResourceIDsOfSounds-->(+ sound of OGG +);
+	multi_soundarray --> 1 = ResourceIDsOfSounds-->(+ sound of AIFF +);
+
+	glk_schannel_play_multi(multi_chanarray, 2, multi_soundarray, 2, 1);
+
+	print "^^Called glk_schannel_play_multi(). You should be hearing the OGG and the AIFF played at the same time.^";
+
+	print "^Press any key to continue.";
+
+	if (MyPause() == -8) rfalse;
+
+	expected_notifys --> 2 = 2;
+	expected_notifys --> 3 = 2;
+
+	glk_schannel_set_volume( tchan --> 2, $8000);
+	glk_schannel_set_volume( tchan --> 3, $8000);
+
+	multi_chanarray --> 0 = tchan --> 2;
+	multi_chanarray --> 1 = tchan --> 3;
+
+	glk_schannel_play_multi(multi_chanarray, 2, multi_soundarray, 2, 2);
+
+	print "^Called glk_schannel_play_multi() a second time. You should hear the OGG and the AIFF playing at half volume. ";
+
+	if (expected_notifys --> 0 == 1 ||  expected_notifys --> 1 == 1)
+		print  "The old OGG should still be playing at full volume.";
+
+	print "^^Press any key to conclude this test.";
+
+	res = MyPause();
+
+	if (res == -8) rfalse;
+
+	rtrue;
+];
+
+[ Volume_change_duration_test;
+
+	if (~~glk_gestalt(gestalt_Sound2, 0))
+	{
+		print "^This interpreter does not support the glk_schannel_set_volume_ext() function. ";
+		print "Do you want to run this test anyway?^>>";
+		if (YesOrNo() == 0) rtrue;
+	}
+
+	print "^Press any key to begin the volume change duration test.";
+
+	if (MyPause() == -8) rfalse;
+
+	glk_schannel_set_volume( tchan --> 0, 0);
+
+	glk_schannel_play_ext( tchan --> 0, ResourceIDsOfSounds-->(+ sound of AIFF +), -1, 1);
+
+	glk_schannel_set_volume_ext( tchan --> 0, 65536, 4000, 1);
+
+	notify_expected = 1;
+	expected_notifys --> 0 = 1;
+	expected_notifys --> 1 = 0;
+	expected_notifys --> 2 = 0;
+
+	print "^An AIFF sound should now slowly increase in volume from silence to max in 4 seconds. When it reaches max, there should be a volume notification ([Volume notification 1.]).^";
+
+	print "^Press any key to continue.";
+
+	if (MyPause() == -8) rfalse;
+
+	glk_schannel_set_volume_ext( tchan --> 1, 0, 0, 0);
+
+	glk_schannel_play_ext( tchan --> 1, ResourceIDsOfSounds-->(+ sound of OGG +), -1, 1);
+
+	glk_schannel_set_volume_ext( tchan --> 0, 0, 2000, 0);
+
+	glk_schannel_set_volume_ext( tchan --> 1, $8000, 4000, 2);
+
+	expected_notifys --> 0 = 2;
+
+	print "^The AIFF should now fade out to silence in 2 seconds while an OGG fades in from silence to half volume in 4 seconds. When the OGG reaches half volume, there should be another notification ([Volume notification 2.]).";
+
+	print "^^Press any key to continue.";
+
+	if (MyPause() == -8) rfalse;
+
+	glk_schannel_set_volume_ext( tchan --> 1, $8000, 2000, 3);
+
+	expected_notifys --> 0 = 3;
+
+	print "^The OGG should now keep playing at half volume, but there should be a notification after two seconds ([Volume notification 3.]).";
+
+	print "^^Press any key to continue.";
+
+	if (MyPause() == -8) rfalse;
+
+	glk_schannel_set_volume_ext( tchan --> 0, $4000, 3000, 4);
+	glk_schannel_set_volume_ext( tchan --> 1, $10000, 5000, 5);
+
+	glk_schannel_set_volume_ext( tchan --> 2, 0, 0, 0);
+
+	glk_schannel_play_ext( tchan --> 2, ResourceIDsOfSounds-->(+ sound of MOD +), -1, 1);
+
+	glk_schannel_set_volume_ext( tchan --> 2, $10000, 7000, 6);
+
+	expected_notifys --> 0 = 4;
+	expected_notifys --> 1 = 5;
+	expected_notifys --> 2 = 6;
+
+	print "^The OGG should now increase to max volume while an AIFF and a MOD fades in at different speeds and different target volumes.";
+
+	print "^^Press any key to continue.";
+
+	if (MyPause() == -8) rfalse;
+
+	print "^All three channels will now fade to silence at different speeds.";
+
+	print "^^Press any key to conclude this test.";
+
+	glk_schannel_set_volume_ext( tchan --> 1, 0, 2500, 7);
+	glk_schannel_set_volume_ext( tchan --> 0, 0, 5000, 8);
+	glk_schannel_set_volume_ext( tchan --> 2, 0, 7000, 9);
+
+	expected_notifys --> 0 = 7;
+	expected_notifys --> 1 = 8;
+	expected_notifys --> 2 = 9;
+
+	if (MyPause() == -8) rfalse;
+
+	print "^";
+
+	rtrue;
+
+];
+
+[ handle_test_volume_notification n i found;
+
+	print "^[Volume notification ", n, ".]^";
+
+	return handle_notifications(n);
+];
+
+[ handle_test_sound_notification n i found;
+
+	print "^[Sound notification ", n, ".]^";
+	return handle_notifications(n);
+];
+
+[ handle_notifications n i found left;
+
+	if (~~notify_expected)
+		print "[This notification was not expected. Something is broken.]^";
+		rfalse;
+
+	found = 0;
+	left = 0;
+
+	for ( i = 0: i < 4 : i++ )
+	{
+		 if (expected_notifys --> i == n)
+		{
+			found = 1;
+			expected_notifys --> i = 0;
+		}
+
+		if (expected_notifys --> i ~= 0)
+			left = 1;
+	}
+
+	! If all expected notifications are found or 0, notify_expected should be false
+	if (left ==  0)
+		notify_expected = 0;
+
+	if (~~found)
+		print "[Wrong notification id! Did not expect notification ", n, ".]^";
+		rfalse;
+
+	rtrue;
+];
+
+[ MyPause key evt;
+	while ( 1 )
+	{
+		key = VM_KeyChar();
+		if ( key == -4 or -5 or -10 or -11 or -12 or -13 )
+		{
+			evt = HandleGlkEvent();
+			continue;
+		}
+		if (key == -8)
+		{
+			print "^^Cancelled.^";
+		}
+		return key;
+	}
+];
+
+-).
+
+Volume 10 - Line echo replacement
+
+Echoed already is a truth state that varies.
+
+Include (-
+
+Global echoed_already = 0;
+Global stored_buffer = 0;
+
+-) after "Definitions.i6t".
+
+The echoed already variable translates into I6 as "echoed_already".
+
+When play begins (this is the check for echo suppression support rule):
+	if glulx line input echo suppression is supported:
+		suppress line input echo in the main window.
+
+To suppress line input echo in the/-- main window:
+	(- glk_set_echo_line_event(gg_mainwin, GLK_NULL); -)
+
+To restart line input in the/-- main window:
+    (-  glk_request_line_event(gg_mainwin, stored_buffer + WORDSIZE, INPUT_BUFFER_LEN - WORDSIZE, stored_buffer-->0); -)
+
+To cancel line input in the/-- main window, preserving keystrokes:
+    (- glk_cancel_line_event(gg_mainwin, gg_event); stored_buffer-->0 = gg_event-->2; -)
+
+A command-showing rule (this is the new print text to the input prompt rule):
+	now echoed already is true;
+	say "[input-style-for-glulx][Glulx replacement command][roman type][conditional paragraph break]".
+
+The new print text to the input prompt rule is listed instead of the print text to the input prompt rule in the command-showing rules.
+
+Include (-
+
+[ VM_KeyChar win nostat done res ix jx ch;
+	jx = ch; ! squash compiler warnings
+	if (win == 0) win = gg_mainwin;
+	if (gg_commandstr ~= 0 && gg_command_reading ~= false) {
+		done = glk_get_line_stream(gg_commandstr, gg_arguments, 31);
+		if (done == 0) {
+			glk_stream_close(gg_commandstr, 0);
+			gg_commandstr = 0;
+			gg_command_reading = false;
+			! fall through to normal user input.
+		} else {
+			! Trim the trailing newline
+			if (gg_arguments->(done-1) == 10) done = done-1;
+			res = gg_arguments->0;
+			if (res == '\') {
+				res = 0;
+				for (ix=1 : ix<done : ix++) {
+					ch = gg_arguments->ix;
+					if (ch >= '0' && ch <= '9') {
+						@shiftl res 4 res;
+						res = res + (ch-'0');
+					} else if (ch >= 'a' && ch <= 'f') {
+						@shiftl res 4 res;
+						res = res + (ch+10-'a');
+					} else if (ch >= 'A' && ch <= 'F') {
+						@shiftl res 4 res;
+						res = res + (ch+10-'A');
+					}
+				}
+			}
+			jump KCPContinue;
+		}
+	}
+	done = false;
+	glk_request_char_event(win);
+	while (~~done) {
+		glk_select(gg_event);
+		switch (gg_event-->0) {
+		  5: ! evtype_Arrange
+			if (nostat) {
+				glk_cancel_char_event(win);
+				res = $80000000;
+				done = true;
+				break;
+			}
+			DrawStatusLine();
+		  2: ! evtype_CharInput
+			if (gg_event-->1 == win) {
+				res = gg_event-->2;
+				done = true;
+				}
+		}
+		ix = HandleGlkEvent(gg_event, 1, gg_arguments);
+		if (ix == 2) {
+			res = gg_arguments-->0;
+			done = true;
+		} else if (ix == -1)  done = false;
+	}
+	if (gg_commandstr ~= 0 && gg_command_reading == false) {
+		if (res < 32 || res >= 256 || (res == '\' or ' ')) {
+			glk_put_char_stream(gg_commandstr, '\');
+			done = 0;
+			jx = res;
+			for (ix=0 : ix<8 : ix++) {
+				@ushiftr jx 28 ch;
+				@shiftl jx 4 jx;
+				ch = ch & $0F;
+				if (ch ~= 0 || ix == 7) done = 1;
+				if (done) {
+					if (ch >= 0 && ch <= 9) ch = ch + '0';
+					else					ch = (ch - 10) + 'A';
+					glk_put_char_stream(gg_commandstr, ch);
+				}
+			}
+		} else {
+			glk_put_char_stream(gg_commandstr, res);
+		}
+		glk_put_char_stream(gg_commandstr, 10); ! newline
+	}
+  .KCPContinue;
+	return res;
+];
+
+[ VM_KeyDelay tenths  key done ix;
+	glk_request_char_event(gg_mainwin);
+	glk_request_timer_events(tenths*100);
+	while (~~done) {
+		glk_select(gg_event);
+		ix = HandleGlkEvent(gg_event, 1, gg_arguments);
+		if (ix == 2) {
+			key = gg_arguments-->0;
+			done = true;
+		}
+		else if (ix >= 0 && gg_event-->0 == 1 or 2) {
+			key = gg_event-->2;
+			done = true;
+		}
+	}
+	glk_cancel_char_event(gg_mainwin);
+	glk_request_timer_events(0);
+	return key;
+];
+
+[ VM_ReadKeyboard  a_buffer a_table done ix;
+	if (gg_commandstr ~= 0 && gg_command_reading ~= false) {
+		done = glk_get_line_stream(gg_commandstr, a_buffer+WORDSIZE,
+			(INPUT_BUFFER_LEN-WORDSIZE)-1);
+		if (done == 0) {
+			glk_stream_close(gg_commandstr, 0);
+			gg_commandstr = 0;
+			gg_command_reading = false;
+		}
+		else {
+			! Trim the trailing newline
+			if ((a_buffer+WORDSIZE)->(done-1) == 10) done = done-1;
+			a_buffer-->0 = done;
+			VM_Style(INPUT_VMSTY);
+			glk_put_buffer(a_buffer+WORDSIZE, done);
+			VM_Style(NORMAL_VMSTY);
+			print "^";
+			jump KPContinue;
+		}
+	}
+	done = false;
+	stored_buffer = a_buffer;
+	glk_request_line_event(gg_mainwin, a_buffer+WORDSIZE, INPUT_BUFFER_LEN-WORDSIZE, 0);
+	while (~~done) {
+		glk_select(gg_event);
+		switch (gg_event-->0) {
+		  5: ! evtype_Arrange
+			DrawStatusLine();
+		  3: ! evtype_LineInput
+			if (gg_event-->1 == gg_mainwin) {
+				a_buffer-->0 = gg_event-->2;
+				done = true;
+			}
+		}
+		ix = HandleGlkEvent(gg_event, 0, a_buffer);
+		if (ix == 2) done = true;
+		else if (ix == -1) done = false;
+	}
+	if (gg_commandstr ~= 0 && gg_command_reading == false) {
+		glk_put_buffer_stream(gg_commandstr, a_buffer+WORDSIZE, a_buffer-->0);
+		glk_put_char_stream(gg_commandstr, 10); ! newline
+	}
+  .KPContinue;
+	VM_Tokenise(a_buffer,a_table);
+	! It's time to close any quote window we've got going.
+	if (gg_quotewin) {
+		glk_window_close(gg_quotewin, 0);
+		gg_quotewin = 0;
+	}
+
+	! === NEW ===
+
+	if ((glk_gestalt(gestalt_LineInputEcho, 0)) && echoed_already == 0) {
+		glk_set_style(style_Input);
+		for (ix=WORDSIZE: ix<(a_buffer-->0)+WORDSIZE: ix++) print (char) a_buffer->ix;
+		style roman;
+		print "^";
+	}
+	echoed_already = 0;
+
+	! === END ===
+
+	#ifdef ECHO_COMMANDS;
+	print "** ";
+	for (ix=WORDSIZE: ix<(a_buffer-->0)+WORDSIZE: ix++) print (char) a_buffer->ix;
+	print "^";
+	#endif; ! ECHO_COMMANDS
+];
+
+-) instead of "Keyboard Input" in "Glulx.i6t".
