@@ -936,7 +936,11 @@ Include (-
 
 [ Autotest ;
 
-	Auto_initialize();
+	if (~~Auto_initialize())
+	{
+		print "^Could not create required sound channels. Test cancelled.^^";
+		rfalse;
+	}
 
 	if (~~Basic_autotest())
 	{
