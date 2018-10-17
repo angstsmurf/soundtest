@@ -116,6 +116,8 @@ Instead of pushing the play button:
 
 The multiplay button is scenery in Sound Stage. The description is "This button will start playback of all existing channels, using the current settings."
 
+Understand "play/-- multi" as the multiplay button.
+
 Instead of pushing the multiplay button:
 	try multiplaying.
 
@@ -170,9 +172,12 @@ The printed name of the stop-all-button is "stop all button". Understand "stop a
 Instead of pushing the stop-all-button:
 	try all-stopping.
 
-The autotest button is scenery in Sound Stage. The description is "This button starts an automated test that calls every supported sound-related Glk function."
+The autotest button is scenery in Sound Stage. The description is "This button starts an automated test suite that calls every supported sound-related Glk function. You can also run the individual parts of the suite. Type TEST for the full list of commands."
 
 Understand "auto/automatic/automated test/-- button/--" or "test button/--" as the autotest button.
+
+Understand "play [autotest button]" as playtesting. Playtesting is an action applying to one thing. Carry out playtesting:
+				try autotesting.
 
 Instead of pushing the autotest button:
 	try autotesting.
