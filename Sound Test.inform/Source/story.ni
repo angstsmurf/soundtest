@@ -1164,9 +1164,17 @@ Include (-
 
 	if (MyPause() == -8) rfalse;
 
+	glk_schannel_set_volume(chan, 0);
+
 	glk_schannel_play_ext(chan, ResourceIDsOfSounds-->(+ sound of AIFF +), -1, 1);
 
-	print "^^You should now be hearing the AIFF sound playing at full volume. Press any key to contine.";
+	print "^^There is an aiff playing AIFF, but because the volume of the channel is 0, you should not be able to hear it. Press any key to contine.";
+
+	if (MyPause() == -8) rfalse;
+
+	glk_schannel_set_volume(chan, $10000);
+
+	print "^^You should now be hearing the AIFF sound playing at full volume (0x10000). Press any key to contine.";
 
 	if (MyPause() == -8) rfalse;
 
@@ -1176,13 +1184,13 @@ Include (-
 
 	if (MyPause() == -8) rfalse;
 
-	print "^^Now the volume of the AIFF should have changed to half volume. Press any key to continue.";
+	print "^^Now the volume of the AIFF should have changed to half volume (0x8000). Press any key to continue.";
 
 	glk_schannel_set_volume(chan, $8000);
 
 	if (MyPause() == -8) rfalse;
 
-	print "^^Now the volume of the AIFF should have changed to 0, so no sound should be heard.^^Press any key to continue.";
+	print "^^Now the volume of the AIFF should have changed to 0 again, so no sound should be heard.^^Press any key to continue.";
 
 	glk_schannel_set_volume(chan, 0);
 	glk_schannel_set_volume(chan2, 0);
