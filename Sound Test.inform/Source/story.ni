@@ -1120,9 +1120,9 @@ Include (-
 
 	tchan --> 0 = glk_schannel_create_ext(rock, $8000);
 
-	glk_schannel_play_ext(tchan --> 0, ResourceIDsOfSounds-->(+ sound of MOD +), -1, 0);
+	glk_schannel_play_ext(tchan --> 0, ResourceIDsOfSounds-->(+ sound of OGG +), -1, 0);
 
-	print "^Created a new channel with glk_schannel_create_ext() at half volume and started to play a MOD on it.^";
+	print "^Created a new channel with glk_schannel_create_ext() at half volume and started to play an OGG on it.^";
 
 	if (MyPause() == -8) rfalse;
 
