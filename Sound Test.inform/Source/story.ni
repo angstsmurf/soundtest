@@ -1353,7 +1353,7 @@ Include (-
 
 	glk_schannel_pause(tchan --> 0);
 
-	print "^^The sound channel is now paused. Press any key to resume it.";
+	print "^^The sound channel is now paused. There should be no sound. Press any key to resume it.";
 
 	if (MyPause() == -8) rfalse;
 
@@ -1367,7 +1367,7 @@ Include (-
 
 	glk_schannel_set_volume(tchan --> 0, $8000);
 
-	print "^^The sound channel is now paused. Press any key to resume it.";
+	print "^^The sound channel is now paused. There should be no sound. Press any key to resume it.";
 
 	if (MyPause() == -8) rfalse;
 
@@ -1381,7 +1381,7 @@ Include (-
 
 	glk_schannel_play_ext(tchan --> 0, ResourceIDsOfSounds-->(+ sound of OGG +), -1, 0);
 
-	print "^^The sound channel is now paused. Press any key to resume it.";
+	print "^^The sound channel is now paused. There should be no sound. Press any key to resume it.";
 
 	if (MyPause() == -8) rfalse;
 
