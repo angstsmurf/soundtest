@@ -1357,23 +1357,27 @@ Include (-
 
 	glk_schannel_pause(tchan --> 0);
 
+	glk_schannel_set_volume(tchan --> 0, $8000);
+
 	print "^^The sound channel is now paused. Press any key to resume it.";
 
 	if (MyPause() == -8) rfalse;
 
-	glk_schannel_set_volume(tchan --> 0, $8000);
-
 	print "^^The sound channel should now resume from where it was paused, but at half volume. Press any key to pause it again.";
+
+	glk_schannel_unpause(tchan --> 0);
 
 	if (MyPause() == -8) rfalse;
 
 	glk_schannel_pause(tchan --> 0);
 
+	glk_schannel_play_ext(tchan --> 0, ResourceIDsOfSounds-->(+ sound of OGG +), -1, 0);
+
 	print "^^The sound channel is now paused. Press any key to resume it.";
 
 	if (MyPause() == -8) rfalse;
 
-	glk_schannel_play_ext(tchan --> 0, ResourceIDsOfSounds-->(+ sound of OGG +), -1, 0);
+	glk_schannel_unpause(tchan --> 0);
 
 	print "^^The sound channel should was resumed, but it should now be playing the OGG instead of the MOD.";
 
