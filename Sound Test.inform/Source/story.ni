@@ -1057,7 +1057,7 @@ Include (-
 		print "^^Error! Could not start the AIFF on the second channel with glk_schannel_play_ext()!";
 	else
 	{
-		print "^^Started playing the second channel. You should now be hearing the AIFF. Unless you waited long enought for the OGG to finish, you should also still be hearing the OGG.";
+		print "^^Started playing the second channel. You should now be hearing the AIFF. Unless you waited long enough for the OGG to finish, you should also still be hearing the OGG.";
 
 		if (glk_gestalt(gestalt_SoundNotify, 0))
 		{
@@ -1166,13 +1166,13 @@ Include (-
 
 	glk_schannel_play_ext(chan, ResourceIDsOfSounds-->(+ sound of AIFF +), -1, 1);
 
-	print "^^You should now be hearing the AIFF sound playing at full volume. Press any key to lower the volume.";
+	print "^^You should now be hearing the AIFF sound playing at full volume. Press any key to contine.";
 
 	if (MyPause() == -8) rfalse;
 
-	print "^^Now the volume of the AIFF should have changed to three-quarters  volume. Press any key to continue.";
+	print "^^Set the volume to 0x20000, double the Glk max of 0x10000. This may have no effect or cause an error. Press any key to lower the volume.";
 
-	glk_schannel_set_volume(chan, $C000);
+	glk_schannel_set_volume(chan, $20000);
 
 	if (MyPause() == -8) rfalse;
 
