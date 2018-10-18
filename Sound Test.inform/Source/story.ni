@@ -815,6 +815,14 @@ To notifytest:
 
 Test notify with "notifytest".
 
+Understand "pausetest" as pausetesting. Pausetesting is an action applying to nothing. Carry out pausetesting:
+	pausetest.
+
+To pausetest:
+	(- Auto_initialize(); if (Pause_test()) print "^"; Auto_uninitialize(); -).
+
+Test pause with "pausetest".
+
 Understand "multitest" as multitesting. Multitesting is an action applying to nothing. Carry out multitesting:
 	multitest.
 
@@ -1093,7 +1101,7 @@ Include (-
 	rtrue;
 ];
 
-[ Advanced_autotest;
+[ Advanced_autotest rock;
 
 	if (~~glk_gestalt(gestalt_Sound2, 0))
 	{
@@ -1103,6 +1111,25 @@ Include (-
 	}
 
 	print "^Running extended automated sound test suite.^";
+
+	Auto_initialize();
+
+	rock = glk_schannel_get_rock(tchan --> 0);
+
+	glk_schannel_destroy(tchan --> 0);
+
+	tchan --> 0 = glk_schannel_create_ext(rock, $8000);
+
+	glk_schannel_play_ext(tchan --> 0, ResourceIDsOfSounds-->(+ sound of MOD +), -1, 0);
+
+	print "^Created a new channel with glk_schannel_create_ext() at half volume and started to play a MOD on it.^";
+
+	if (MyPause() == -8) rfalse;
+
+	! Quickly fade out
+	glk_schannel_set_volume_ext( tchan --> 0, 0, 1000, 0);
+
+	if (~~Pause_test()) rfalse;
 
 	Auto_initialize();
 
@@ -1285,6 +1312,72 @@ Include (-
 	print "^Again playing three AIFF sounds on three channels. This time there should be no notifications.";
 
 	print "^^Press any key to conclude the notification test.";
+
+	if (MyPause() == -8) rfalse;
+
+	print "^";
+
+	rtrue;
+];
+
+[ Pause_test res;
+
+	if (~~glk_gestalt(gestalt_Sound2, 0))
+	{
+		print "^This interpreter does not support the glk_schannel_pause() or glk_schannel_unpause() functions. ";
+		print "Do you want to run this test anyway?^>>";
+		if (YesOrNo() == 0) rfalse;
+	}
+
+	print "^Press any key to begin the pause test.";
+
+	if (MyPause() == -8) rfalse;
+
+	glk_schannel_set_volume(tchan --> 0, $10000);
+
+	glk_schannel_play_ext(tchan --> 0, ResourceIDsOfSounds-->(+ sound of MOD +), -1, 0);
+
+	print "^^Started to play a MOD. Press any key to pause it.";
+
+	if (MyPause() == -8) rfalse;
+
+	glk_schannel_pause(tchan --> 0);
+
+	glk_schannel_pause(tchan --> 0);
+
+	print "^^The sound channel is now paused. Press any key to resume it.";
+
+	if (MyPause() == -8) rfalse;
+
+	glk_schannel_unpause(tchan --> 0);
+
+	print "^^The sound channel should now resume from the exakt same place where it was paused. Press any key to pause it again.";
+
+	if (MyPause() == -8) rfalse;
+
+	glk_schannel_pause(tchan --> 0);
+
+	print "^^The sound channel is now paused. Press any key to resume it.";
+
+	if (MyPause() == -8) rfalse;
+
+	glk_schannel_set_volume(tchan --> 0, $8000);
+
+	print "^^The sound channel should now resume from where it was paused, but at half volume. Press any key to pause it again.";
+
+	if (MyPause() == -8) rfalse;
+
+	glk_schannel_pause(tchan --> 0);
+
+	print "^^The sound channel is now paused. Press any key to resume it.";
+
+	if (MyPause() == -8) rfalse;
+
+	glk_schannel_play_ext(tchan --> 0, ResourceIDsOfSounds-->(+ sound of OGG +), -1, 0);
+
+	print "^^The sound channel should was resumed, but it should now be playing the OGG instead of the MOD.";
+
+	print "^^Press any key to conclude this test.";
 
 	if (MyPause() == -8) rfalse;
 
