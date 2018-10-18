@@ -1127,7 +1127,7 @@ Include (-
 	if (MyPause() == -8) rfalse;
 
 	! Quickly fade out
-	glk_schannel_set_volume_ext( tchan --> 0, 0, 1000, 0);
+	glk_schannel_set_volume_ext( tchan --> 0, 0, 500, 0);
 
 	if (~~Pause_test()) rfalse;
 
