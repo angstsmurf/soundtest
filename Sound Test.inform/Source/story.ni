@@ -1759,7 +1759,9 @@ Include (-
 		}
 	}
 	done = false;
+	! === NEW ===
 	stored_buffer = a_buffer;
+	! === END ===
 	glk_request_line_event(gg_mainwin, a_buffer+WORDSIZE, INPUT_BUFFER_LEN-WORDSIZE, 0);
 	while (~~done) {
 		glk_select(gg_event);
