@@ -1460,7 +1460,7 @@ Include (-
 
 	glk_schannel_play_ext( tchan --> 0, ResourceIDsOfSounds-->(+ sound of AIFF +), -1, 1);
 
-	glk_schannel_set_volume_ext( tchan --> 0, 65536, 4000, 1);
+	glk_schannel_set_volume_ext( tchan --> 0, $10000, 4000, 1);
 
 	notify_expected = 1;
 	expected_notifys --> 0 = 1;
