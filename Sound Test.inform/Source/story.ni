@@ -1460,7 +1460,7 @@ Include (-
 
 	glk_schannel_play_ext( tchan --> 0, ResourceIDsOfSounds-->(+ sound of AIFF +), -1, 1);
 
-	glk_schannel_set_volume_ext( tchan --> 0, $10000, 4000, 1);
+	glk_schannel_set_volume_ext(tchan --> 0, $10000, 4000, 1);
 
 	notify_expected = 1;
 	expected_notifys --> 0 = 1;
@@ -1535,7 +1535,6 @@ Include (-
 	print "^";
 
 	rtrue;
-
 ];
 
 [ handle_test_volume_notification n i found;
