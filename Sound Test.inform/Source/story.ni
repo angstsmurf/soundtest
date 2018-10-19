@@ -670,7 +670,8 @@ To recreate sound channels:
 
 To restore channel states:
 	let multi be false;
-	repeat with C running through sound channels:
+	repeat with C running through sound channels which are not uncreated:
+		volume-adjust channel id (channel id of C) to (volume of C);
 		if C is stopped:
 			stop channel id (channel id of C);
 			[say "Stopped channel [C].";]
@@ -715,6 +716,9 @@ To decide which number is the result of playing (SFX - sound name):
 
 To volume-adjust to (N - a number):
 	(- glk_schannel_set_volume(current_channel, {N}); -).
+
+To volume-adjust channel id (C - a number) to (N - a number):
+	(- glk_schannel_set_volume({C}, {N}); -).
 
 To volume-adjust to (X - a number) with a duration of (Y - a number) and notification (N - a number):
 	(- glk_schannel_set_volume_ext(current_channel, {X}, {Y}, {N}); -).
