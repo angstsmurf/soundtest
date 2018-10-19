@@ -641,6 +641,7 @@ restore the game rule response (B) is "[post-restore routine]";
 	recover sound channels;
 	recreate sound channels;
 	restore channel states;
+	now current channel id is channel id of current sound channel;
 	check for unsupported features.
 
 To recover sound channels:
