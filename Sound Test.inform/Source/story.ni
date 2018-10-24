@@ -1578,7 +1578,7 @@ Include (-
 
 	for ( i = 0: i < 4 : i++ )
 	{
-		 if (expected_notifys --> i == n)
+		if (expected_notifys --> i == n)
 		{
 			found = 1;
 			expected_notifys --> i = 0;
