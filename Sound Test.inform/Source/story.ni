@@ -1554,14 +1554,14 @@ Include (-
 	rtrue;
 ];
 
-[ handle_test_volume_notification n i found;
+[ handle_test_volume_notification n;
 
 	print "^[Volume notification ", n, ".]^";
 
 	return handle_notifications(n);
 ];
 
-[ handle_test_sound_notification n i found;
+[ handle_test_sound_notification n;
 
 	print "^[Sound notification ", n, ".]^";
 	return handle_notifications(n);
