@@ -1364,7 +1364,7 @@ Include (-
 
 	glk_schannel_unpause(tchan --> 0);
 
-	print "^^The sound channel should now resume from the exakt same place where it was paused. Press any key to pause it again.";
+	print "^^The sound channel should now resume from the place where it was paused. Press any key to pause it again.";
 
 	if (MyPause() == -8) rfalse;
 
