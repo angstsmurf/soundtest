@@ -67,6 +67,19 @@ To say sound-type-name of (N – a sound name):
 		-- sound of OGG:
 			say "OGG".
 
+To decide which number is the resource id of (N - a sound name):
+	(- ResourceIDsOfSounds-->{N} -).
+
+To say the/-- name of resource (N – a number):
+	if N is the resource id of sound of AIFF:
+		say "AIFF";
+	otherwise:
+		if N is the resource id of sound of MOD:
+			say "MOD";
+		otherwise:
+			if N is the resource id of sound of OGG:
+				say "OGG".
+
 To say status of (C – a sound channel):
 	if C is uncreated:
 		say "uncreated";
@@ -543,7 +556,7 @@ To say playing-channels-list:
 		repeat through Table of Sound-Channels:
 			if chan entry is playing:
 				add chan entry to L;
-		say "[L][if multiplay channels remaining is greater than 1]. [bracket]Channels that are part of a play multi command will be listed as playing even if they have finished[close bracket][end if]";
+		say "[L]";
 	otherwise:
 		say "none".
 
@@ -566,7 +579,7 @@ Glulx input handling rule for a volume-event:
 
 Glulx input handling rule for a sound-notify-event:
 	if test-running is true:
-		handle test sound notification glk event value 2;
+		handle test sound glk event value 1 notification glk event value 2;
 		the rule succeeds;
 	cancel line input in the main window, preserving keystrokes;
 	unless glk sound notification is supported:
@@ -575,14 +588,24 @@ Glulx input handling rule for a sound-notify-event:
 	if N is multinotification:
 		handle multichannel stopped;
 	otherwise:
-		say "[bracket]Sound notification: A sound finished playing on channel [N].[close bracket][paragraph break]>";
+		say "[bracket]Sound notification: The [name of resource (glk event value 1)] finished playing on channel [N].[close bracket][paragraph break]>";
 		let C be the chan in row N of the Table of Sound-Channels;
 		now C is stopped;
 	restart line input in the main window.
 
 To handle multichannel stopped:
 	decrement multiplay channels remaining;
-	say "[bracket]A sound, which was part of a play multi command, stopped playing. [if multiplay channels remaining is greater than 0]There [regarding multiplay channels remaining][are] [multiplay channels remaining] channel[s] still playing as part of this command[otherwise]That was the last channel, the play multi command is concluded[end if].[close bracket][line break]>";
+	let N be 0;
+	repeat with C running through sound channels:
+		if the multiplay state of C is true:
+			if glk event value 1 is the resource id of (channel-sound of C):
+				now C is stopped;
+				now multiplay state of C is false;
+				now N is index of C;
+				break;
+	if N is 0:
+		say "[bracket]Something is went wrong. Could not guess which channel just stopped playing[close bracket][line break]";
+	say "[bracket]A[unless glk event value 1 is the resource id of sound of MOD]n[end if] [name of resource (glk event value 1)][unless N is 0] on channel [N][end if], which was part of a play multi command, stopped. [if multiplay channels remaining is greater than 0]There [regarding multiplay channels remaining][are] [multiplay channels remaining] channel[s] still playing as part of this command[otherwise]That was the last channel, the play multi command is concluded[end if].[close bracket][line break]>";
 	if multiplay channels remaining is less than 1:
 		repeat with C running through sound channels:
 			if the multiplay state of C is true:
@@ -863,8 +886,8 @@ Array expected_notifys --> 4;
 To handle test volume notification (N - a number):
 	(- handle_test_volume_notification({N}); -).
 
-To handle test sound notification (N - a number):
-	(- handle_test_sound_notification({N}); -).
+To handle test sound (S - a number) notification (N - a number):
+	(- handle_test_sound_notification({S},{N}); -).
 
 
 Include (-
@@ -1561,10 +1584,26 @@ Include (-
 	return handle_notifications(n);
 ];
 
-[ handle_test_sound_notification n;
+[ handle_test_sound_notification s n;
 
-	print "^[Sound notification ", n, ".]^";
+	print "^[Sound notification ", n, " for sound resource id ", s, " (the ",(sound_name)s, ").]^";
 	return handle_notifications(n);
+];
+
+[sound_name s;
+
+	if (s == ResourceIDsOfSounds-->(+ sound of AIFF +))
+	{
+		print "AIFF";
+	}
+	else if (s == ResourceIDsOfSounds-->(+ sound of OGG +))
+	{
+		print "OGG";
+	}
+	else if (s == ResourceIDsOfSounds-->(+ sound of MOD +))
+	{
+		print "MOD";
+	}
 ];
 
 [ handle_notifications n i found left;
