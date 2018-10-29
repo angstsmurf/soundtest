@@ -1095,7 +1095,7 @@ Include (-
 		}
 	}
 
-	print "^^Press any key to continue.";
+	print "^^Press any key to continue.^";
 
 	if (MyPause() == -8) rfalse;
 
@@ -1148,10 +1148,17 @@ Include (-
 
 	tchan --> 0 = glk_schannel_create_ext(rock, $8000);
 
-	glk_schannel_play_ext(tchan --> 0, ResourceIDsOfSounds-->(+ sound of OGG +), -1, 0);
-
-	print "^Created a new channel with glk_schannel_create_ext() at half volume and started to play an OGG on it.^";
-
+	if (~~tchan --> 0)
+	{
+		print "^Error! Could not create new channel with glk_schannel_create_ext()! Abort test?^>>";
+		if (YesOrNo()==0) rfalse;
+	}
+	else
+	{
+		if (~~glk_schannel_play_ext(tchan --> 0, ResourceIDsOfSounds-->(+ sound of OGG +), -1, 0))
+			print "^Error! Could not start an OGG with glk_schannel_play_ext()!^";
+		else print "^Created a new channel with glk_schannel_create_ext() at half volume and started to play an OGG on it.^";
+	}
 	if (MyPause() == -8) rfalse;
 
 	! Quickly fade out
@@ -1194,9 +1201,12 @@ Include (-
 
 	glk_schannel_set_volume(chan, 0);
 
-	glk_schannel_play_ext(chan, ResourceIDsOfSounds-->(+ sound of AIFF +), -1, 1);
+	if (~~glk_schannel_play_ext(chan, ResourceIDsOfSounds-->(+ sound of AIFF +), -1, 1))
+		print "^^Error! Could not start AIFF on first channel!";
+	else
+		print "^^There is an aiff playing AIFF, but because the volume of the channel is 0, you should not be able to hear it.";
 
-	print "^^There is an aiff playing AIFF, but because the volume of the channel is 0, you should not be able to hear it. Press any key to contine.";
+	print " Press any key to contine.";
 
 	if (MyPause() == -8) rfalse;
 
@@ -1312,11 +1322,14 @@ Include (-
 
 	if (MyPause() == -8) rfalse;
 
-	glk_schannel_play_ext( tchan --> 0, ResourceIDsOfSounds-->(+ sound of AIFF +), 1, 1);
-	glk_schannel_play_ext( tchan --> 1, ResourceIDsOfSounds-->(+ sound of AIFF +), 1, 2);
-	glk_schannel_play_ext( tchan --> 2, ResourceIDsOfSounds-->(+ sound of AIFF +), 1, 3);
-
 	print "^^Now playing three AIFF sounds on three different channels. If you wait for them to finish, you should get three sound notifications.^";
+
+	if (~~glk_schannel_play_ext( tchan --> 0, ResourceIDsOfSounds-->(+ sound of AIFF +), 1, 1))
+		print "Error! Could not start AIFF on the first channel!^";
+	if (~~glk_schannel_play_ext( tchan --> 1, ResourceIDsOfSounds-->(+ sound of AIFF +), 1, 2))
+		print "Error! Could not start AIFF on the second channel!^";
+	if (~~glk_schannel_play_ext( tchan --> 2, ResourceIDsOfSounds-->(+ sound of AIFF +), 1, 3))
+		print "Error! Could not start AIFF on the third channel!^";
 
 	notify_expected = 1;
 	expected_notifys --> 0 = 1;
@@ -1371,9 +1384,10 @@ Include (-
 
 	glk_schannel_set_volume(tchan --> 0, $10000);
 
-	glk_schannel_play_ext(tchan --> 0, ResourceIDsOfSounds-->(+ sound of MOD +), -1, 0);
-
-	print "^^Started to play a MOD. Press any key to pause it.";
+	if (~~glk_schannel_play_ext(tchan --> 0, ResourceIDsOfSounds-->(+ sound of MOD +), -1, 0))
+		print "^^Error! Could not start MOD on the first channel! Press any key to continue.";
+	else
+		print "^^Started to play a MOD. Press any key to pause it.";
 
 	if (MyPause() == -8) rfalse;
 
@@ -1498,7 +1512,10 @@ Include (-
 
 	glk_schannel_set_volume( tchan --> 0, 0);
 
-	glk_schannel_play_ext( tchan --> 0, ResourceIDsOfSounds-->(+ sound of AIFF +), -1, 1);
+	if (~~glk_schannel_play_ext( tchan --> 0, ResourceIDsOfSounds-->(+ sound of AIFF +), -1, 1))
+		print "^Error! Could not start AIFF on the first channel!^";
+	else
+		print "^An AIFF sound should now slowly increase in volume from silence to max in 4 seconds. When it reaches max, there should be a volume notification ([Volume notification 1.]).^";
 
 	glk_schannel_set_volume_ext(tchan --> 0, $10000, 4000, 1);
 
@@ -1507,7 +1524,7 @@ Include (-
 	expected_notifys --> 1 = 0;
 	expected_notifys --> 2 = 0;
 
-	print "^An AIFF sound should now slowly increase in volume from silence to max in 4 seconds. When it reaches max, there should be a volume notification ([Volume notification 1.]).^";
+
 
 	print "^Press any key to continue.";
 
