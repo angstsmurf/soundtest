@@ -1347,20 +1347,24 @@ Include (-
 	expected_notifys --> 1 = 0;
 	expected_notifys --> 2 = 0;
 
-	glk_schannel_play_ext( tchan --> 0, ResourceIDsOfSounds-->(+ sound of AIFF +), 1, 1);
+	if (~~glk_schannel_play_ext( tchan --> 0, ResourceIDsOfSounds-->(+ sound of AIFF +), 1, 1))
+		print "Error! Could not start AIFF on the first channel!^";
 
 	glk_schannel_stop(tchan --> 0);
 
-	glk_schannel_play_ext( tchan --> 1, ResourceIDsOfSounds-->(+ sound of AIFF +), 1, 2);
+	if (~~glk_schannel_play_ext( tchan --> 1, ResourceIDsOfSounds-->(+ sound of AIFF +), 1, 2))
+	    print "Error! Could not start AIFF on the second channel!^";
 
 	! Interrupting channel tchan --> 1 with a new sound
-	glk_schannel_play_ext( tchan --> 1, ResourceIDsOfSounds-->(+ sound of AIFF +), 1, 0);
+	if (~~glk_schannel_play_ext( tchan --> 1, ResourceIDsOfSounds-->(+ sound of AIFF +), 1, 0))
+		print "Error! Could not start another AIFF on the second channel!^";
 
-	glk_schannel_play_ext( tchan --> 2, ResourceIDsOfSounds-->(+ sound of AIFF +), 1, 3);
+	if (~~glk_schannel_play_ext( tchan --> 2, ResourceIDsOfSounds-->(+ sound of AIFF +), 1, 3))
+		print "Error! Could not start AIFF on the third channel!^";
 
 	glk_schannel_destroy(tchan --> 2);
 
-	print "^Again playing three AIFF sounds on three channels. This time there should be no notifications.";
+	print "^Again playing three AIFF sounds on three channels. This time there should be no notifications. The first is stopped before it has finished, the second is interrupted by another sound with a notification of 0, and the third is destroyed before it has finished.";
 
 	print "^^Press any key to conclude the notification test.";
 
@@ -1423,7 +1427,8 @@ Include (-
 
 	glk_schannel_pause(tchan --> 0);
 
-	glk_schannel_play_ext(tchan --> 0, ResourceIDsOfSounds-->(+ sound of OGG +), -1, 0);
+	if (~~glk_schannel_play_ext(tchan --> 0, ResourceIDsOfSounds-->(+ sound of OGG +), -1, 0))
+	    print "Error! Could not play OGG on the first channel!^";
 
 	print "^^The sound channel is now paused. There should be no sound. Press any key to resume it.";
 
@@ -1526,15 +1531,14 @@ Include (-
 	expected_notifys --> 1 = 0;
 	expected_notifys --> 2 = 0;
 
-
-
 	print "^Press any key to continue.";
 
 	if (MyPause() == -8) rfalse;
 
 	glk_schannel_set_volume_ext( tchan --> 1, 0, 0, 0);
 
-	glk_schannel_play_ext( tchan --> 1, ResourceIDsOfSounds-->(+ sound of OGG +), -1, 1);
+	if (~~glk_schannel_play_ext( tchan --> 1, ResourceIDsOfSounds-->(+ sound of OGG +), -1, 1))
+	    print "^Error! Could not start OGG on the second channel!^";
 
 	glk_schannel_set_volume_ext( tchan --> 0, 0, 2000, 0);
 
@@ -1563,7 +1567,8 @@ Include (-
 
 	glk_schannel_set_volume_ext( tchan --> 2, 0, 0, 0);
 
-	glk_schannel_play_ext( tchan --> 2, ResourceIDsOfSounds-->(+ sound of MOD +), -1, 1);
+	if (~~glk_schannel_play_ext( tchan --> 2, ResourceIDsOfSounds-->(+ sound of MOD +), -1, 1))
+		print "^Error! Could not start MOD on the third channel!^";
 
 	glk_schannel_set_volume_ext( tchan --> 2, $10000, 7000, 6);
 
