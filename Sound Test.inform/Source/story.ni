@@ -2,7 +2,7 @@
 
 The story headline is "Not a game".
 
-The release number is 2.
+The release number is 3.
 
 Include Glulx Entry Points by Emily Short.
 
