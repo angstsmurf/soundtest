@@ -573,7 +573,9 @@ Volume 6 - Handle sound notifications
 
 Glulx input handling rule for a volume-event:
 	if test-running is true:
+		cancel character input in the main window;
 		handle test volume notification glk event value 2;
+		restart character input in the main window;
 		the rule succeeds;
 	cancel line input in the main window, preserving keystrokes;
 	say "[bracket]Volume notification: A volume change was completed on channel [glk event value 2].[close bracket][line break]>";
@@ -581,7 +583,9 @@ Glulx input handling rule for a volume-event:
 
 Glulx input handling rule for a sound-notify-event:
 	if test-running is true:
+		cancel character input in the main window;
 		handle test sound glk event value 1 notification glk event value 2;
+		restart character input in the main window;
 		the rule succeeds;
 	cancel line input in the main window, preserving keystrokes;
 	unless glk sound notification is supported:
@@ -1703,6 +1707,9 @@ To suppress line input echo in the/-- main window:
 
 To restart line input in the/-- main window:
     (-  glk_request_line_event(gg_mainwin, stored_buffer + WORDSIZE, INPUT_BUFFER_LEN - WORDSIZE, stored_buffer-->0); -)
+
+To restart character input in the/-- main window:
+	(-  glk_request_char_event(gg_mainwin); -)
 
 To cancel line input in the/-- main window, preserving keystrokes:
     (- glk_cancel_line_event(gg_mainwin, gg_event); stored_buffer-->0 = gg_event-->2; -)
