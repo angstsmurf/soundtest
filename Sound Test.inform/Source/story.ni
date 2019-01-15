@@ -1672,7 +1672,7 @@ Include (-
 	{
 		HandleGlkEvent();
 	}
-	if (key == -8)
+	else if (key == -8)
 	{
 		print "^^Cancelled.^";
 	}
