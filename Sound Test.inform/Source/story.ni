@@ -1666,21 +1666,17 @@ Include (-
 	rtrue;
 ];
 
-[ MyPause key evt;
-	while ( 1 )
+[ MyPause key;
+	key = VM_KeyChar();
+	if ( key == -4 or -5 or -10 or -11 or -12 or -13 )
 	{
-		key = VM_KeyChar();
-		if ( key == -4 or -5 or -10 or -11 or -12 or -13 )
-		{
-			evt = HandleGlkEvent();
-			continue;
-		}
-		if (key == -8)
-		{
-			print "^^Cancelled.^";
-		}
-		return key;
+		HandleGlkEvent();
 	}
+	if (key == -8)
+	{
+		print "^^Cancelled.^";
+	}
+	return key;
 ];
 
 -).
