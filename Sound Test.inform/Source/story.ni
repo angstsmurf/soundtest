@@ -466,6 +466,21 @@ Understand "set [something] to [number]" as number-setting it to. Number-setting
 			now the notification of current sound channel is the number understood;
 	say "You set [the noun] to [the number understood]."
 
+The number-setting it to action has a sound channel called the previous channel.
+
+Setting action variables for number-setting:
+    now the previous channel is the current sound channel.
+
+After number-setting the channel knob to a number:
+	if the volume of current sound channel is not the volume of the previous channel:
+		say "The volume setting slides from [the volume of the previous channel] to [the volume of the current sound channel].";
+	if the repeats of current sound channel is not the repeats of the previous channel:
+		say "The repeats knob turns from [the repeats of the previous channel] to [the repeats of the current sound channel].";
+	if the volume change delay of current sound channel is not the volume change delay of the previous channel:
+		say "The fade delay slides from [the volume change delay of the previous channel] to [the volume change delay of the current sound channel].";
+	if the channel-sound of current sound channel is not the channel-sound of the previous channel:
+		say "The sound type setting switches from [sound-type-name of channel-sound of the previous channel] to [sound-type-name of channel-sound of current sound channel].";
+
 To create a new sound channel:
 	if the simplify button is in location:
 		now the channel id of current sound channel is new channel with rock (rock of current sound channel) and volume (volume of current sound channel);
