@@ -1,6 +1,6 @@
 "Sound Test"
 
-The story headline is "Not a game".
+The story headline is "Not a game. Needs debug build to work.".
 
 The release number is 3.
 
