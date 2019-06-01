@@ -888,7 +888,7 @@ To fadetest:
 
 Test fade with "fadetest".
 
-Test sdlbug with "set repeats to 100 / play / set channel to 2 / set repeats to 100 / set type to ogg / play / set channel to 3 / set repeats to 100 / set type to mod / play / set channel to 1 / stop".
+Test sdlbug with "set channel to 1 / set repeats to 100 / set type to aiff / play / set channel to 2 / set repeats to 100 / set type to ogg / play / set channel to 3 / set repeats to 100 / set type to mod / play / set channel to 1 / stop".
 
 
 
