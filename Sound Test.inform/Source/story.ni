@@ -1228,7 +1228,7 @@ Include (-
 	if (~~glk_schannel_play_ext(chan, ResourceIDsOfSounds-->(+ sound of AIFF +), -1, 1))
 		print "^^Error! Could not start AIFF on first channel!";
 	else
-		print "^^There is an aiff playing AIFF, but because the volume of the channel is 0, you should not be able to hear it.";
+		print "^^The AIFF sound is currently playing, but because the volume of the channel is 0, you should not be able to hear it.";
 
 	print " Press any key to contine.";
 
