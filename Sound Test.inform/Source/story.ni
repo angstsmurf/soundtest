@@ -208,11 +208,14 @@ Carry out playing:
 	if error is 0:
 		say "An error occurs! The channel did not start playing![line break]";
 		stop the action;
-	say "Sound channel [current sound channel] [if current sound channel is playing]stops playing its previous sound and [end if]begins to play the [sound-type-name of channel-sound of current sound channel] at volume [volume of current sound channel] with [repeats of current sound channel] repetition[s] and notification number [notification of current sound channel].";
-	if the multiplay state of current sound channel is true:
-		handle multichannel stopped;
-		now multiplay state of current sound channel is false;
-	now the current sound channel is playing;
+	if current sound channel is paused:
+		say "Sound channel [current sound channel] has been paused, but will begin playing the [sound-type-name of channel-sound of current sound channel] as soon as it is unpaused.";
+	otherwise:
+		say "Sound channel [current sound channel] [if current sound channel is playing]stops playing its previous sound and [end if]begins to play the [sound-type-name of channel-sound of current sound channel] at volume [volume of current sound channel] with [repeats of current sound channel] repetition[s] and notification number [notification of current sound channel].";
+		if the multiplay state of current sound channel is true:
+			handle multichannel stopped;
+			now multiplay state of current sound channel is false;
+		now the current sound channel is playing;
 
 Understand "play simple" or "simple-play" or "simple" as simple-playing. Simple-playing is an action applying to nothing. Carry out simple-playing:
 	say "You push the play simple button. [run paragraph on]";
@@ -220,11 +223,14 @@ Understand "play simple" or "simple-play" or "simple" as simple-playing. Simple-
 	if error is 0:
 		say "An error occurs! The channel did not start playing![line break]";
 		stop the action;
-	say "Sound channel [current sound channel] [if current sound channel is playing]stops playing its previous sound and [end if]begins to play the [sound-type-name of channel-sound of current sound channel]. (As the simple play command does not support notifications, this channel will keep its 'playing' status after it has finished.)";
-	if the multiplay state of current sound channel is true:
-		handle multichannel stopped;
-		now multiplay state of current sound channel is false;
-	now the current sound channel is playing;
+	if current sound channel is paused:
+		say "Sound channel [current sound channel] has been paused, but will begin playing the [sound-type-name of channel-sound of current sound channel] as soon as it is unpaused.";
+	otherwise:
+		say "Sound channel [current sound channel] [if current sound channel is playing]stops playing its previous sound and [end if]begins to play the [sound-type-name of channel-sound of current sound channel]. (As the simple play command does not support notifications, this channel will keep its 'playing' status after it has finished.)";
+		if the multiplay state of current sound channel is true:
+			handle multichannel stopped;
+			now multiplay state of current sound channel is false;
+		now the current sound channel is playing;
 
 Understand "play channel/-- [number]" as channel-playing. Channel-playing is an action applying to one number. Carry out channel-playing:
 	try number-setting channel knob to the number understood;
