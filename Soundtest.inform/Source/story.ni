@@ -1,4 +1,4 @@
-"Sound Test"
+"Soundtest"
 
 The story headline is "Not a game. Needs debug build to work.".
 
