@@ -1508,6 +1508,8 @@ Include (-
 	expected_notifys --> 2 = 2;
 	expected_notifys --> 3 = 2;
 
+	notify_expected = 1;
+
 	glk_schannel_set_volume( tchan --> 2, $8000);
 	glk_schannel_set_volume( tchan --> 3, $8000);
 
@@ -1519,7 +1521,9 @@ Include (-
 	print "^Called glk_schannel_play_multi() a second time. You should hear the OGG and the AIFF playing at half volume. ";
 
 	if (expected_notifys --> 0 == 1 ||  expected_notifys --> 1 == 1)
+	{
 		print  "The old OGG should still be playing at full volume.";
+	}
 
 	print "^^Press any key to conclude this test.";
 
@@ -1570,6 +1574,7 @@ Include (-
 
 	glk_schannel_set_volume_ext( tchan --> 1, $8000, 4000, 2);
 
+	notify_expected = 1;
 	expected_notifys --> 0 = 2;
 
 	print "^The AIFF should now fade out to silence in 2 seconds while an OGG fades in from silence to half volume in 4 seconds. When the OGG reaches half volume, there should be another notification ([Volume notification 2.]).";
@@ -1580,6 +1585,7 @@ Include (-
 
 	glk_schannel_set_volume_ext( tchan --> 1, $8000, 2000, 3);
 
+	notify_expected = 1;
 	expected_notifys --> 0 = 3;
 
 	print "^The OGG should now keep playing at half volume, but there should be a notification after two seconds ([Volume notification 3.]).";
@@ -1598,6 +1604,7 @@ Include (-
 
 	glk_schannel_set_volume_ext( tchan --> 2, $10000, 7000, 6);
 
+	notify_expected = 1;
 	expected_notifys --> 0 = 4;
 	expected_notifys --> 1 = 5;
 	expected_notifys --> 2 = 6;
@@ -1616,6 +1623,7 @@ Include (-
 	glk_schannel_set_volume_ext( tchan --> 0, 0, 5000, 8);
 	glk_schannel_set_volume_ext( tchan --> 2, 0, 7000, 9);
 
+	notify_expected = 1;
 	expected_notifys --> 0 = 7;
 	expected_notifys --> 1 = 8;
 	expected_notifys --> 2 = 9;
@@ -1659,31 +1667,39 @@ Include (-
 [ handle_notifications n i found left;
 
 	if (~~notify_expected)
+	{
 		print "[This notification was not expected. Something is broken.]^";
 		rfalse;
+	}
 
 	found = 0;
 	left = 0;
 
 	for ( i = 0: i < 4 : i++ )
 	{
-		if (expected_notifys --> i == n)
+		if (expected_notifys --> i == n && found == 0)
 		{
 			found = 1;
 			expected_notifys --> i = 0;
 		}
 
 		if (expected_notifys --> i ~= 0)
+		{
 			left = 1;
+		}
 	}
 
 	! If all expected notifications are found or 0, notify_expected should be false
-	if (left ==  0)
+	if (~~left)
+	{
 		notify_expected = 0;
+	}
 
 	if (~~found)
+	{
 		print "[Wrong notification id! Did not expect notification ", n, ".]^";
 		rfalse;
+	}
 
 	rtrue;
 ];
