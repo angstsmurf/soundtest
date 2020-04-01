@@ -644,7 +644,7 @@ Volume 7 - Intialization
 Book 1 - When play begins
 
 First when play begins:
-	say "Welcome to the Sound Test![paragraph break]The Ogg Vorbis file included in this test is 'Cool Adventure Intro' by Eric Matyas. See www.soundimage.org[line break]The MOD file is 'Run' by Stranger. See modarchive.org[line break]The AIFF file is taken from the Glulx test game 'Sensory Jam' by Andrew Plotkin. See eblong.com/zarf/glulx/[paragraph break]".
+	say "Welcome to Soundtest![paragraph break]The Ogg Vorbis file included in this test is 'Cool Adventure Intro' by Eric Matyas. See www.soundimage.org[line break]The MOD file is 'Run' by Stranger. See modarchive.org[line break]The AIFF file is taken from the Glulx test game 'Sensory Jam' by Andrew Plotkin. See eblong.com/zarf/glulx/[paragraph break]".
 
 When play begins:
 	check for unsupported features;
