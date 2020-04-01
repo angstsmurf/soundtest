@@ -836,7 +836,7 @@ To autotest:
 
 Test me with "autotest".
 
-Section 1 - Individual test commands
+Book 1 - Individual test commands
 
 Understand "advanced" as fulltesting. Fulltesting is an action applying to nothing. Carry out fulltesting:
 	advance.
@@ -896,8 +896,9 @@ Test fade with "fadetest".
 
 Test sdlbug with "set channel to 1 / set repeats to 100 / set type to aiff / play / set channel to 2 / set repeats to 100 / set type to ogg / play / set channel to 3 / set repeats to 100 / set type to mod / play / set channel to 1 / stop".
 
-Section 2 - Inform 6 stuff
+Book 2 - Inform 6 stuff
 
+Part 1 - Global variables
 
 Test-running is a truth state that varies. The test-running variable translates into I6 as "running_test".
 
@@ -911,12 +912,7 @@ Array expected_notifys --> 4;
 
 -) after "Definitions.i6t".
 
-To handle test volume notification (N - a number):
-	(- handle_test_volume_notification({N}); -).
-
-To handle test sound (S - a number) notification (N - a number):
-	(- handle_test_sound_notification({S},{N}); -).
-
+Part 2 - Test suites
 
 Include (-
 
@@ -924,7 +920,6 @@ Include (-
 
 	Stop_all_channels();
 	Auto_uninitialize();
-
 	running_test = 1;
 
 	!First, we try to find the sound channel with greatest rock.
@@ -1212,6 +1207,14 @@ Include (-
 	rtrue;
 ];
 
+-).
+
+Part 3 - Individual tests
+
+Chapter 1 - Volume Test
+
+Include (-
+
 [ Volume_test chan chan2;
 
 	if (~~glk_gestalt(gestalt_SoundVolume, 0))
@@ -1283,6 +1286,12 @@ Include (-
 	rtrue;
 ];
 
+-).
+
+Chapter 2 - MOD Test
+
+Include (-
+
 [ MOD_test ;
 
 	if (~~glk_gestalt(gestalt_SoundMusic, 0))
@@ -1336,6 +1345,12 @@ Include (-
 
 	rtrue;
 ];
+
+-).
+
+Chapter 3 - Notification Test
+
+Include (-
 
 [ Notify_test;
 
@@ -1401,6 +1416,12 @@ Include (-
 
 	rtrue;
 ];
+
+-).
+
+Chapter 4 - Pause Test
+
+Include (-
 
 [ Pause_test res;
 
@@ -1491,6 +1512,12 @@ Include (-
 	rtrue;
 ];
 
+-).
+
+Chapter 5 - Multi Test
+
+Include (-
+
 [ Play_multi_test res;
 
 	if (~~glk_gestalt(gestalt_Sound2, 0))
@@ -1554,6 +1581,12 @@ Include (-
 
 	rtrue;
 ];
+
+-).
+
+Chapter 6 - Fade Test
+
+Include (-
 
 [ Volume_change_duration_test;
 
@@ -1694,6 +1727,18 @@ Include (-
 	print "^";
 	rtrue;
 ];
+
+-).
+
+Part 4 - Notification handling
+
+To handle test volume notification (N - a number):
+	(- handle_test_volume_notification({N}); -).
+
+To handle test sound (S - a number) notification (N - a number):
+	(- handle_test_sound_notification({S},{N}); -).
+
+Include (-
 
 [ handle_test_volume_notification n;
 
