@@ -1463,7 +1463,7 @@ Include (-
 
 	glk_schannel_unpause(tchan --> 0);
 
-	print "^^The sound channel should was resumed, but it should now be playing the OGG instead of the MOD.";
+	print "^^The sound channel was resumed, but it should now be playing the OGG instead of the MOD.";
 
 	print "^^Press any key to continue.";
 
