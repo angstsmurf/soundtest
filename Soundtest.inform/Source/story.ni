@@ -1211,7 +1211,7 @@ Include (-
 
 Part 3 - Individual tests
 
-Chapter 1 - Volume Test
+Chapter 1 - Volume test
 
 Include (-
 
@@ -1288,7 +1288,7 @@ Include (-
 
 -).
 
-Chapter 2 - MOD Test
+Chapter 2 - MOD test
 
 Include (-
 
@@ -1348,7 +1348,7 @@ Include (-
 
 -).
 
-Chapter 3 - Notification Test
+Chapter 3 - Notification test
 
 Include (-
 
@@ -1419,7 +1419,7 @@ Include (-
 
 -).
 
-Chapter 4 - Pause Test
+Chapter 4 - Pause test
 
 Include (-
 
@@ -1514,7 +1514,7 @@ Include (-
 
 -).
 
-Chapter 5 - Multi Test
+Chapter 5 - Multi test
 
 Include (-
 
@@ -1584,7 +1584,7 @@ Include (-
 
 -).
 
-Chapter 6 - Fade Test
+Chapter 6 - Fade test
 
 Include (-
 
