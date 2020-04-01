@@ -1117,6 +1117,7 @@ Include (-
 
 		if (glk_gestalt(gestalt_SoundNotify, 0))
 		{
+			print " (Note that there should be no notification when the OGG finishes.)";
 			print "^^When the AIFF stops playing, a sound notification message should be printed ([Sound notification 2.]). Not if you press a button before it has finished, though.";
 			notify_expected = 1;
 			expected_notifys --> 0 = 2;
