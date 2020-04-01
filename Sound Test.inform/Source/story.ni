@@ -1465,6 +1465,23 @@ Include (-
 
 	print "^^The sound channel should was resumed, but it should now be playing the OGG instead of the MOD.";
 
+	print "^^Press any key to continue.";
+
+	if (MyPause() == -8) rfalse;
+
+	glk_schannel_stop(tchan --> 0);
+	glk_schannel_pause(tchan --> 0);
+	if (~~glk_schannel_play_ext(tchan --> 0, ResourceIDsOfSounds-->(+ sound of AIFF +), 1, 0))
+		print "Error! Could not play AIFF on the first channel!^";
+
+	print "^^The sound channel was paused, and then the AIFF started playing on it, which made it immediately pause. There should be no sound. Press any key to resume the sound.";
+
+	if (MyPause() == -8) rfalse;
+
+	glk_schannel_unpause(tchan --> 0);
+
+	print "^^The sound channel is now unpaused, so the AIFF which was immediately paused should have resumed playing.";
+
 	print "^^Press any key to conclude this test.";
 
 	if (MyPause() == -8) rfalse;
@@ -1514,23 +1531,26 @@ Include (-
 	glk_schannel_set_volume( tchan --> 2, $8000);
 	glk_schannel_set_volume( tchan --> 3, $8000);
 
+	glk_schannel_pause(tchan --> 2);
+	glk_schannel_pause(tchan --> 3);
+
 	multi_chanarray --> 0 = tchan --> 2;
 	multi_chanarray --> 1 = tchan --> 3;
 
 	glk_schannel_play_multi(multi_chanarray, 2, multi_soundarray, 2, 2);
 
-	print "^Called glk_schannel_play_multi() a second time. You should hear the OGG and the AIFF playing at half volume. ";
+	print "^Called glk_schannel_play_multi() a second time. You should hear the OGG and the AIFF playing at half volume.";
 
 	if (expected_notifys --> 0 == 1 ||  expected_notifys --> 1 == 1)
 	{
-		print  "The old OGG should still be playing at full volume.";
+		print  " The old OGG should still be playing at full volume.";
 	}
+
+	print "^^The channels were paused before the glk_schannel_play_multi() command, but this should have had no effect, as they should have been automatically unpaused.";
 
 	print "^^Press any key to conclude this test.";
 
-	res = MyPause();
-
-	if (res == -8) rfalse;
+	if (MyPause() == -8) rfalse;
 
 	rtrue;
 ];
@@ -1618,10 +1638,10 @@ Include (-
 
 	print "^All three channels will now fade to silence at different speeds.";
 
-	print "^^Press any key to conclude this test.";
+	print "^^Press any key to continue.";
 
-	glk_schannel_set_volume_ext( tchan --> 1, 0, 2500, 7);
 	glk_schannel_set_volume_ext( tchan --> 0, 0, 5000, 8);
+	glk_schannel_set_volume_ext( tchan --> 1, 0, 2500, 7);
 	glk_schannel_set_volume_ext( tchan --> 2, 0, 7000, 9);
 
 	notify_expected = 1;
@@ -1631,8 +1651,47 @@ Include (-
 
 	if (MyPause() == -8) rfalse;
 
-	print "^";
+	glk_schannel_stop( tchan --> 0);
+	glk_schannel_stop( tchan --> 1);
+	glk_schannel_stop( tchan --> 2);
 
+	glk_schannel_pause( tchan --> 0);
+	glk_schannel_pause( tchan --> 1);
+	glk_schannel_pause( tchan --> 2);
+
+	if (~~glk_schannel_play_ext( tchan --> 0, ResourceIDsOfSounds-->(+ sound of MOD +), -1, 1))
+		print "^Error! Could not start MOD on the first channel!^";
+
+	glk_schannel_set_volume_ext( tchan --> 0, $10000, 0, 0);
+	glk_schannel_set_volume_ext( tchan --> 0, 0, 5000, 10);
+
+	notify_expected = 1;
+	expected_notifys --> 0 = 10;
+
+	print "^All channels were stopped and then paused. Then, a MOD was started on the first channel, but it should have been paused before you could hear it. A five-second volume fade-out (from max volume) was also initiated, and this should not have been paused. (Volume fades can never be paused.)";
+
+	print "^^Press any key to continue.";
+
+	if (MyPause() == -8) rfalse;
+
+	glk_schannel_unpause( tchan --> 0);
+
+	print "^The channel is now unpaused. ";
+
+	if (expected_notifys --> 0 == 10)
+	{
+		print " You should hear the MOD fade out.";
+	}
+	else
+	{
+		print " Because it had already faded to zero volume, no sound should be heard.";
+	}
+
+	print "^^Press any key to conclude this test.";
+
+	if (MyPause() == -8) rfalse;
+
+	print "^";
 	rtrue;
 ];
 
