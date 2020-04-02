@@ -203,8 +203,7 @@ Volume 4 - Actions
 
 Book 1 - Pushing buttons
 
-Understand "play" as playing. Playing is an action applying to nothing.
-Carry out playing:
+Understand "play" as playing. Playing is an action applying to nothing. Carry out playing:
 	say "You push the play button. [run paragraph on]";
 	let error be the result of playing (channel-sound of current sound channel) with (repeats of current sound channel) repeats and notification (notification of current sound channel);
 	if error is 0:
