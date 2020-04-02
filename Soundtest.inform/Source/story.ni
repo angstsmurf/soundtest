@@ -369,7 +369,7 @@ To multiplay sound:
 			add C to L;
 			now multiplay state of C is true;
 			now C is playing;
-			add multisound C at N;
+			add multisound C at index N of the multi sound list;
 			increment N;
 	if N is greater than 0:
 		let R be multiplay result with N channels and notify (multinotification);
@@ -791,7 +791,7 @@ To unpause sound:
 To unpause channel id (N - a number):
 	(- glk_schannel_unpause({N}); -).
 
-To add multisound (S - a sound channel) at (N - a number):
+To add multisound (S - a sound channel) at index (N - a number) of the/-- multi sound list:
 	(- multi_chanarray --> {N} = {S}.(+ channel id +); multi_soundarray --> {N} = ResourceIDsOfSounds --> {S}.(+ channel-sound +); -).
 
 To decide which number is multiplay result with (C - a number) channels and notify (N - a number):
