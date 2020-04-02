@@ -1555,12 +1555,12 @@ Include (-
 	multi_chanarray --> 0 = tchan --> 0;
 	multi_chanarray --> 1 = tchan --> 1;
 
-	multi_soundarray --> 0 = ResourceIDsOfSounds-->(+ sound of OGG +);
+	multi_soundarray --> 0 = ResourceIDsOfSounds-->(+ sound of MOD +);
 	multi_soundarray --> 1 = ResourceIDsOfSounds-->(+ sound of AIFF +);
 
 	glk_schannel_play_multi(multi_chanarray, 2, multi_soundarray, 2, 1);
 
-	print "^^Called glk_schannel_play_multi(). You should be hearing the OGG and the AIFF played at the same time.^";
+	print "^^Called glk_schannel_play_multi(). You should be hearing the MOD and the AIFF played at the same time.^";
 
 	print "^Press any key to continue.";
 
@@ -1580,7 +1580,7 @@ Include (-
 	multi_chanarray --> 0 = tchan --> 2;
 	multi_chanarray --> 1 = tchan --> 3;
 
-	multi_soundarray --> 0 = ResourceIDsOfSounds-->(+ sound of MOD +);
+	multi_soundarray --> 0 = ResourceIDsOfSounds-->(+ sound of OGG +);
 
 	glk_schannel_play_multi(multi_chanarray, 2, multi_soundarray, 2, 2);
 
@@ -1588,7 +1588,7 @@ Include (-
 
 	if (expected_notifys --> 0 == 1 ||  expected_notifys --> 1 == 1)
 	{
-		print  " The old OGG should still be playing at full volume.";
+		print  " The old MOD should still be playing at full volume.";
 	}
 
 	print "^^Press any key to unpause the paused channels.";
@@ -1598,11 +1598,11 @@ Include (-
 	glk_schannel_unpause(tchan --> 2);
 	glk_schannel_unpause(tchan --> 3);
 
-	print "^The channels were unpaused. The MOD and the AIFF should start playing at half volume.";
+	print "^The channels were unpaused. The OGG and the AIFF should start playing at half volume.";
 
 	if (expected_notifys --> 0 == 1 ||  expected_notifys --> 1 == 1)
 	{
-		print  " The old OGG should still be playing at full volume.";
+		print  " The old MOD should still be playing at full volume.";
 	}
 
 	print "^^Press any key to conclude this test.";
