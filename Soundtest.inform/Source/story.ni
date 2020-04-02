@@ -67,7 +67,9 @@ To say sound-type-name of (N – a sound name):
 		-- sound of MOD:
 			say "MOD";
 		-- sound of OGG:
-			say "OGG".
+			say "OGG";
+		-- otherwise:
+			say "[bracket]illegal sound type[close bracket]".
 
 To decide which number is the resource id of (N - a sound name):
 	(- ResourceIDsOfSounds-->{N} -).
