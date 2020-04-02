@@ -580,7 +580,7 @@ Volume 5 - Describing the room
 
 The description of the Sound Stage is "This is a mixer room full of different controls. Most prominent is a large PLAY button, accompanied by the usual PAUSE and STOP buttons, and a volume control. There is also a switch for sound type (set to play [sound-type-name of the channel-sound of current sound channel]), and another one to change the sound channel, currently set to [index of current sound channel].[paragraph break]Furthermore, you notice an AUTOTEST button, a DESTROY button, a HINT button, [if the simplify button is in location]a SIMPLIFY button, a PLAY MULTI button and a fade delay control[otherwise]and a COMPLICATE button[end if]. You can get a full list of all available controls by typing EXAMINE CONTROLS."
 
-The large display is fixed in place in Sound Stage. The initial appearance of the large display is "There is a large display on the wall here. [description of the large display]". The description of the large display is "It says: 'Open sound channels: [open-channels-list]. Currently playing: [playing-channels-list]'."
+The large display is fixed in place in Sound Stage. The initial appearance of the large display is "There is a large display on the wall here. [description of the large display]". The description of the large display is "It says: 'Open sound channels: [open-channels-list][if pause button is in location]. Paused: [paused-channels-list][end if]. Currently playing: [playing-channels-list]'."
 
 To say open-channels-list:
 	if there is a sound channel which is not uncreated:
@@ -597,6 +597,16 @@ To say playing-channels-list:
 		let L be a list of sound channels;
 		repeat through Table of Sound-Channels:
 			if chan entry is playing:
+				add chan entry to L;
+		say "[L]";
+	otherwise:
+		say "none".
+
+To say paused-channels-list:
+	if there is a sound channel which is paused:
+		let L be a list of sound channels;
+		repeat through Table of Sound-Channels:
+			if chan entry is paused:
 				add chan entry to L;
 		say "[L]";
 	otherwise:
