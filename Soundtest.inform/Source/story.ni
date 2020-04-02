@@ -363,19 +363,35 @@ To multiplay sound:
 	if multiplay channels remaining is greater than 0:
 		say "There already seems to be an active play multi command. This will be replaced by the new one, as this test unfortunately does not yet support multiple simultaneous play multi commands.";
 	let N be 0;
+	let P be 0;
 	let L be a list of sound channels;
 	repeat with C running through sound channels:
 		unless C is uncreated:
 			add C to L;
 			now multiplay state of C is true;
-			now C is playing;
-			add multisound C at index N of the multi sound list;
+			unless C is paused:
+				now C is playing;
+			otherwise:
+				increment P;
+			add channel C at index N of the multisound channel list;
 			increment N;
 	if N is greater than 0:
 		let R be multiplay result with N channels and notify (multinotification);
 		say "Tried to simultaneously start playback on [regarding the number of entries in L]channel[s] [L].";
 		now multiplay channels remaining is R;
-		say "Successfully started playing [R] channel[s].";
+		say "Successfully started playing [R] channel[s]";
+		if P is N and N is not 0:
+			if P is 1:
+				say ", but it was paused";
+			otherwise:
+				say ", but all of them were paused";
+		otherwise:
+			if P is greater than 0:
+				if P is 1:
+					say ", but one of them was paused";
+				otherwise:
+					say ", but [P] of them were paused";
+		say "."
 
 [The global variables below are used to keep track of channels included in a glk_schannel_play_multi() command.]
 
@@ -791,7 +807,7 @@ To unpause sound:
 To unpause channel id (N - a number):
 	(- glk_schannel_unpause({N}); -).
 
-To add multisound (S - a sound channel) at index (N - a number) of the/-- multi sound list:
+To add channel (S - a sound channel) at index (N - a number) of the/-- multisound channel list:
 	(- multi_chanarray --> {N} = {S}.(+ channel id +); multi_soundarray --> {N} = ResourceIDsOfSounds --> {S}.(+ channel-sound +); -).
 
 To decide which number is multiplay result with (C - a number) channels and notify (N - a number):
@@ -1564,16 +1580,30 @@ Include (-
 	multi_chanarray --> 0 = tchan --> 2;
 	multi_chanarray --> 1 = tchan --> 3;
 
+	multi_soundarray --> 0 = ResourceIDsOfSounds-->(+ sound of MOD +);
+
 	glk_schannel_play_multi(multi_chanarray, 2, multi_soundarray, 2, 2);
 
-	print "^Called glk_schannel_play_multi() a second time. You should hear the OGG and the AIFF playing at half volume.";
+	print "^Called glk_schannel_play_multi() a second time. But both the targeted channels were paused, so none of them should be heard playing.";
 
 	if (expected_notifys --> 0 == 1 ||  expected_notifys --> 1 == 1)
 	{
 		print  " The old OGG should still be playing at full volume.";
 	}
 
-	print "^^The channels were paused before the glk_schannel_play_multi() command, but this should have had no effect, as they should have been automatically unpaused.";
+	print "^^Press any key to unpause the paused channels.";
+
+	if (MyPause() == -8) rfalse;
+
+	glk_schannel_unpause(tchan --> 2);
+	glk_schannel_unpause(tchan --> 3);
+
+	print "^The channels were unpaused. The MOD and the AIFF should start playing at half volume.";
+
+	if (expected_notifys --> 0 == 1 ||  expected_notifys --> 1 == 1)
+	{
+		print  " The old OGG should still be playing at full volume.";
+	}
 
 	print "^^Press any key to conclude this test.";
 
