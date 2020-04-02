@@ -662,18 +662,19 @@ To handle unknown multichannel stopped:
 		say "[bracket]Something went wrong. A sound notification event for a play multi event was received, but no matching channel was found[close bracket][line break]";
 
 To handle multichannel (C - a sound channel) stopped:
-	decrement multiplay channels remaining;
 	if the multiplay state of C is false:
 		say "[bracket]Something went wrong. Handle multichannel was called with [C], which does not appear to be part of a play multi command[close bracket][line break]";
-	now C is stopped;
 	now multiplay state of C is false;
-	say "[bracket]A[unless glk event value 1 is the resource id of sound of MOD]n[end if] [name of resource (glk event value 1)] on channel [C], which was part of a play multi command, stopped. [if multiplay channels remaining is greater than 0]There [regarding multiplay channels remaining][are] [multiplay channels remaining] channel[s] still playing as part of this command[otherwise]That was the last channel, the play multi command is concluded[end if].[close bracket][line break]>";
+	now C is stopped;
+	decrement multiplay channels remaining;
 	if multiplay channels remaining is less than 1:
 		repeat with X running through sound channels:
 			if the multiplay state of X is true:
-				say "[bracket]Something went wrong. All play multi channels should be finished, but channel [X] still claims to be part of a play multi command[close bracket][line break]";
+				say "[bracket]Something went wrong. The multiplay channels remaining counter is [multiplay channels remaining], but channel [X] still claims to be part of a play multi command[close bracket][line break]";
 				now multiplay state of X is false;
 				now X is stopped;
+	say "[bracket]A[unless glk event value 1 is the resource id of sound of MOD]n[end if] [name of resource (glk event value 1)] on channel [C], which was part of a play multi command, stopped. [if multiplay channels remaining is greater than 0]There [regarding multiplay channels remaining][are] [multiplay channels remaining] channel[s] still playing as part of this command[otherwise]That was the last channel, the play multi command is concluded[end if].[close bracket][line break]>".
+
 
 Volume 7 - Intialization
 
