@@ -762,13 +762,13 @@ To restore channel states:
 			stop channel id (channel id of C);
 			[say "Stopped channel [C].";]
 		otherwise if C is playing or C is paused:
+			if C is paused and glulx sounds are fully supported:
+				pause channel id (channel id of C);
+				[say "Paused channel [C].";]
 			let error be the result of playing channel id (channel id of C) with sound (channel-sound of C) and (repeats of C) repeats and notification (notification of C);
 			if error is 0:
 				say "Error! Failed to play channel [C].";
 			[say "Started channel [C].";]
-			if C is paused and glulx sounds are fully supported:
-				pause channel id (channel id of C);
-				[say "Paused channel [C].";]
 		if multiplay state of C is true:
 			now multi is true;
 	if multi is true and glulx sounds are fully supported:
