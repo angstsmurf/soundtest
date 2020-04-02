@@ -214,7 +214,7 @@ Understand "play" as playing. Playing is an action applying to nothing. Carry ou
 	otherwise:
 		say "Sound channel [current sound channel] [if current sound channel is playing]stops playing its previous sound and [end if]begins to play the [sound-type-name of channel-sound of current sound channel] at volume [volume of current sound channel] with [repeats of current sound channel] repetition[s] and notification number [notification of current sound channel].";
 		if the multiplay state of current sound channel is true:
-			handle multichannel stopped;
+			handle multichannel (current sound channel) stopped;
 			now multiplay state of current sound channel is false;
 		now the current sound channel is playing;
 
@@ -229,7 +229,7 @@ Understand "play simple" or "simple-play" or "simple" as simple-playing. Simple-
 	otherwise:
 		say "Sound channel [current sound channel] [if current sound channel is playing]stops playing its previous sound and [end if]begins to play the [sound-type-name of channel-sound of current sound channel]. (As the simple play command does not support notifications, this channel will keep its 'playing' status after it has finished.)";
 		if the multiplay state of current sound channel is true:
-			handle multichannel stopped;
+			handle multichannel (current sound channel) stopped;
 			now multiplay state of current sound channel is false;
 		now the current sound channel is playing;
 
@@ -244,7 +244,7 @@ Carry out stopping:
 		say "Current sound channel is already stopped.";
 		stop the action;
 	if the multiplay state of current sound channel is true:
-		handle multichannel stopped;
+		handle multichannel (current sound channel) stopped;
 		now multiplay state of current sound channel is false;
 	say "Channel [current sound channel] stopped.";
 	now the current sound channel is stopped.
@@ -260,7 +260,7 @@ Understand "stop all" as all-stopping. All-stopping is an action applying to not
 			if chan entry is playing or chan entry is paused:
 				now chan entry is stopped;
 				if the multiplay state of chan entry is true:
-					handle multichannel stopped;
+					handle multichannel chan entry stopped;
 					now multiplay state of chan entry is false;
 				say "Stopped sound channel [chan entry].";
 	otherwise:
@@ -307,7 +307,7 @@ Understand "destroy" as self-destructing. Self-destructing is an action applying
 	destroy channel (channel id of current sound channel);
 	say "Channel [current sound channel] destroyed.";
 	if the multiplay state of current sound channel is true:
-		handle multichannel stopped;
+		handle multichannel current sound channel stopped;
 		now multiplay state of current sound channel is false;
 	now the current sound channel is uncreated;
 	try number-setting channel knob to 1.
@@ -630,31 +630,38 @@ Glulx input handling rule for a sound-notify-event:
 		say "[bracket]This interpreter claims to not support sound notifications, so something must be wrong.[close bracket][line break]";
 	let N be glk event value 2;
 	if N is multinotification:
-		handle multichannel stopped;
+		handle unknown multichannel stopped;
 	otherwise:
-		say "[bracket]Sound notification: The [name of resource (glk event value 1)] finished playing on channel [N].[close bracket][paragraph break]>";
 		let C be the chan in row N of the Table of Sound-Channels;
+		say "[bracket]Sound notification: The [name of resource (glk event value 1)] finished playing on channel [N].[close bracket][paragraph break]>";
 		now C is stopped;
 	restart line input in the main window.
 
-To handle multichannel stopped:
-	decrement multiplay channels remaining;
-	let N be 0;
-	repeat with C running through sound channels:
+To handle unknown multichannel stopped:
+	let R be glk event value 1;
+	let found be false;
+	repeat with C running through sound channels which are playing:
 		if the multiplay state of C is true:
-			if glk event value 1 is the resource id of (channel-sound of C):
-				now C is stopped;
-				now multiplay state of C is false;
-				now N is index of C;
+			if R is the resource id of (channel-sound of C):
+				now found is true;
+				handle multichannel C stopped;
 				break;
-	if N is 0:
-		say "[bracket]Something is went wrong. Could not guess which channel just stopped playing[close bracket][line break]";
-	say "[bracket]A[unless glk event value 1 is the resource id of sound of MOD]n[end if] [name of resource (glk event value 1)][unless N is 0] on channel [N][end if], which was part of a play multi command, stopped. [if multiplay channels remaining is greater than 0]There [regarding multiplay channels remaining][are] [multiplay channels remaining] channel[s] still playing as part of this command[otherwise]That was the last channel, the play multi command is concluded[end if].[close bracket][line break]>";
+	if found is false:
+		say "[bracket]Something is wrong. A sound notification event for a play multi event was received, but no matching channel was found[close bracket][line break]";
+
+To handle multichannel (C - a sound channel) stopped:
+	decrement multiplay channels remaining;
+	if the multiplay state of C is false:
+		say "[bracket]Something went wrong. Handle multichannel was called with [C], which does not appear to be part of a play multi command[close bracket][line break]";
+	now C is stopped;
+	now multiplay state of C is false;
+	say "[bracket]A[unless glk event value 1 is the resource id of sound of MOD]n[end if] [name of resource (glk event value 1)] on channel [C], which was part of a play multi command, stopped. [if multiplay channels remaining is greater than 0]There [regarding multiplay channels remaining][are] [multiplay channels remaining] channel[s] still playing as part of this command[otherwise]That was the last channel, the play multi command is concluded[end if].[close bracket][line break]>";
 	if multiplay channels remaining is less than 1:
-		repeat with C running through sound channels:
-			if the multiplay state of C is true:
-				now multiplay state of C is false;
-				now C is stopped;
+		repeat with X running through sound channels:
+			if the multiplay state of X is true:
+				say "[bracket]Something is went wrong. All play multi channels should be finished, but channel [X] still claims to be part of a play multi command[close bracket][line break]";
+				now multiplay state of X is false;
+				now X is stopped;
 
 Volume 7 - Intialization
 
