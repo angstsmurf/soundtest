@@ -2,7 +2,7 @@
 
 The story headline is "Not a game. Needs debug build to work.".
 
-The release number is 6.
+The release number is 7.
 
 Include Glulx Entry Points by Emily Short.
 
