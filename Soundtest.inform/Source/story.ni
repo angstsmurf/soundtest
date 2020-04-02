@@ -1617,7 +1617,7 @@ Include (-
 
 	glk_schannel_play_multi(multi_chanarray, 2, multi_soundarray, 2, 2);
 
-	print "^Called glk_schannel_play_multi() a second time. But both the targeted channels were paused, so none of them should be heard playing.";
+	print "^Called glk_schannel_play_multi() a second time, but both the targeted channels were paused first, so none of them should be heard.";
 
 	if (expected_notifys --> 0 == 1 ||  expected_notifys --> 1 == 1)
 	{
@@ -1631,7 +1631,7 @@ Include (-
 	glk_schannel_unpause(tchan --> 2);
 	glk_schannel_unpause(tchan --> 3);
 
-	print "^The channels were unpaused. The OGG and the AIFF should start playing at half volume.";
+	print "^The channels were unpaused. The OGG and the AIFF should now be playing at half volume.";
 
 	if (expected_notifys --> 0 == 1 ||  expected_notifys --> 1 == 1)
 	{
