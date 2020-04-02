@@ -864,7 +864,10 @@ Include (-
 
 Volume 9 - Automatic testing
 
+Book 1 - Individual test commands
+
 Understand "autotest" or "auto test/--" or "automated test/--" as autotesting. Autotesting is an action applying to nothing. Carry out autotesting:
+	pre-test autostop;
 	autotest.
 
 To autotest:
@@ -872,9 +875,8 @@ To autotest:
 
 Test me with "autotest".
 
-Book 1 - Individual test commands
-
 Understand "advanced" as fulltesting. Fulltesting is an action applying to nothing. Carry out fulltesting:
+	pre-test autostop;
 	advance.
 
 To advance:
@@ -883,6 +885,7 @@ To advance:
 Test advanced with "advanced".
 
 Understand "volumetest" as volumetesting. Volumetesting is an action applying to nothing. Carry out volumetesting:
+	pre-test autostop;
 	volumetest.
 
 To volumetest:
@@ -891,6 +894,7 @@ To volumetest:
 Test volume with "volumetest".
 
 Understand "modtest" as modtesting. Modtesting is an action applying to nothing. Carry out modtesting:
+	pre-test autostop;
 	modtest.
 
 To modtest:
@@ -899,6 +903,7 @@ To modtest:
 Test mod with "modtest".
 
 Understand "notifytest" as notifytesting. Notifytesting is an action applying to nothing. Carry out notifytesting:
+	pre-test autostop;
 	notifytest.
 
 To notifytest:
@@ -907,6 +912,7 @@ To notifytest:
 Test notify with "notifytest".
 
 Understand "pausetest" as pausetesting. Pausetesting is an action applying to nothing. Carry out pausetesting:
+	pre-test autostop;
 	pausetest.
 
 To pausetest:
@@ -915,6 +921,7 @@ To pausetest:
 Test pause with "pausetest".
 
 Understand "multitest" as multitesting. Multitesting is an action applying to nothing. Carry out multitesting:
+	pre-test autostop;
 	multitest.
 
 To multitest:
@@ -923,6 +930,7 @@ To multitest:
 Test multi with "multitest".
 
 Understand "fadetest" as fadetesting. Fadetesting is an action applying to nothing. Carry out fadetesting:
+	pre-test autostop;
 	fadetest.
 
 To fadetest:
@@ -931,6 +939,11 @@ To fadetest:
 Test fade with "fadetest".
 
 Test sdlbug with "set channel to 1 / set repeats to 100 / set type to aiff / play / set channel to 2 / set repeats to 100 / set type to ogg / play / set channel to 3 / set repeats to 100 / set type to mod / play / set channel to 1 / stop".
+
+To pre-test autostop:
+	if there is a sound channel which is playing or there is a sound channel which is paused:
+		say "[bracket]In order to perform tests, we must first stop any channels that are currently playing[close bracket][line break]";
+		try all-stopping.
 
 Book 2 - Inform 6 stuff
 
