@@ -943,7 +943,7 @@ Test sdlbug with "set channel to 1 / set repeats to 100 / set type to aiff / pla
 
 To pre-test autostop:
 	if there is a sound channel which is playing or there is a sound channel which is paused:
-		say "[bracket]In order to perform tests, we must first stop any channels that are currently playing[close bracket][line break]";
+		say "[bracket]In order to perform tests, we must first stop any channels that are currently playing or paused[close bracket][line break]";
 		try all-stopping.
 
 Book 2 - Inform 6 stuff
