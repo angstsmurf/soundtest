@@ -659,7 +659,7 @@ To handle unknown multichannel stopped:
 				handle multichannel C stopped;
 				break;
 	if found is false:
-		say "[bracket]Something is wrong. A sound notification event for a play multi event was received, but no matching channel was found[close bracket][line break]";
+		say "[bracket]Something went wrong. A sound notification event for a play multi event was received, but no matching channel was found[close bracket][line break]";
 
 To handle multichannel (C - a sound channel) stopped:
 	decrement multiplay channels remaining;
@@ -671,7 +671,7 @@ To handle multichannel (C - a sound channel) stopped:
 	if multiplay channels remaining is less than 1:
 		repeat with X running through sound channels:
 			if the multiplay state of X is true:
-				say "[bracket]Something is went wrong. All play multi channels should be finished, but channel [X] still claims to be part of a play multi command[close bracket][line break]";
+				say "[bracket]Something went wrong. All play multi channels should be finished, but channel [X] still claims to be part of a play multi command[close bracket][line break]";
 				now multiplay state of X is false;
 				now X is stopped;
 
