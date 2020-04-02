@@ -366,6 +366,7 @@ To multiplay sound:
 	let N be 0;
 	let P be 0;
 	let L be a list of sound channels;
+	let paused-channels be a list of sound channels;
 	repeat with C running through sound channels:
 		unless C is uncreated:
 			add C to L;
@@ -374,13 +375,14 @@ To multiplay sound:
 				now C is playing;
 			otherwise:
 				increment P;
+				add C to paused-channels;
 			add channel C at index N of the multisound channel list;
 			increment N;
 	if N is greater than 0:
 		let R be multiplay result with N channels and notify (multinotification);
 		say "Tried to simultaneously start playback on [regarding the number of entries in L]channel[s] [L].";
 		now multiplay channels remaining is R;
-		say "Successfully started playing [R] channel[s]";
+		say "Successfully started [R] channel[s]";
 		if P is N and N is not 0:
 			if P is 1:
 				say ", but it was paused";
@@ -389,9 +391,9 @@ To multiplay sound:
 		otherwise:
 			if P is greater than 0:
 				if P is 1:
-					say ", but one of them was paused";
+					say ", but one of them ([paused-channels]) was paused";
 				otherwise:
-					say ", but [P] of them were paused";
+					say ", but [paused-channels] were paused";
 		say "."
 
 [The global variables below are used to keep track of channels included in a glk_schannel_play_multi() command.]
