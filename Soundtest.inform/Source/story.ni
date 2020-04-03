@@ -730,6 +730,7 @@ When play begins:
 	[say "Set channel 1 (and current sound channel) to foreground channel, id [channel id of current sound channel] and rock [rock of channel id (foreground channel id)].";]
 	let BGC be chan in row 2 of the Table of Sound-Channels;
 	now the channel id of BGC is background channel id;
+	now the channel-sound of BGC is sound of OGG;
 	[say "Set channel 2 to background channel, id [background channel id] and rock [rock of channel id (background channel id)].";]
 	recover sound channels;
 	restore channel states.
