@@ -431,6 +431,8 @@ Understand "aiff" as aiffing.  Aiffing is an action applying to nothing. Carry o
 	if the channel-sound of current sound channel is sound of AIFF:
 		say "The current sound channel is already set to play AIFF.";
 	otherwise:
+		if multi-state is true:
+			stop the action;
 		now the channel-sound of current sound channel is sound of AIFF;
 		say "You set the sound type to AIFF."
 
@@ -438,6 +440,8 @@ Understand "mod" as modding.  Modding is an action applying to nothing. Carry ou
 	if the channel-sound of current sound channel is sound of MOD:
 		say "The current sound channel is already set to play MOD.";
 	otherwise:
+		if multi-state is true:
+			stop the action;
 		unless glk mod sound is supported:
 			say "[bracket]This interpreter claims to not support playing sound files in MOD format, but we'll try anyway[close bracket][line break]";
 		now the channel-sound of current sound channel is sound of MOD;
@@ -447,6 +451,8 @@ Understand "ogg" as ogging.  Ogging is an action applying to nothing. Carry out 
 	if the channel-sound of current sound channel is sound of OGG:
 		say "The current sound channel is already set to play OGG.";
 	otherwise:
+		if multi-state is true:
+			stop the action;
 		now the channel-sound of current sound channel is sound of OGG;
 		say "You set the sound type to OGG."
 
@@ -460,6 +466,12 @@ Understand "set [type switch] to [sound type]"  as soundtype-setting it to. Soun
 			try modding;
 		-- ogg:
 			try ogging.
+
+To decide if multi-state is true:
+	if the multiplay state of current sound channel is true:
+		say "This testing environment will be confused if the sound type of a channel which is part of a multiplay command is changed during playback. Please wait until the sound is finished.";
+		yes;
+	no.
 
 Book 4 - Changing numeric sliders
 
