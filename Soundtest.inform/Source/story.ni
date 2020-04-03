@@ -370,12 +370,6 @@ To multiplay sound:
 	repeat with C running through sound channels:
 		unless C is uncreated:
 			add C to L;
-			now multiplay state of C is true;
-			unless C is paused:
-				now C is playing;
-			otherwise:
-				increment P;
-				add C to paused-channels;
 			add channel C at index N of the multisound channel list;
 			increment N;
 	if N is greater than 0:
@@ -383,6 +377,16 @@ To multiplay sound:
 		say "Tried to simultaneously start playback on [regarding the number of entries in L]channel[s] [L].";
 		now multiplay channels remaining is R;
 		say "Successfully started [R] channel[s]";
+		if R is greater than 0:
+			repeat with index running from 1 to R:
+				[This is not entirely accurate, as the channels that did not start playing are not necessarily last in the list, but it is the most common case and still better than nothing]
+				let C be entry index of L;
+				unless C is paused:
+					now C is playing;
+				otherwise:
+					increment P;
+					add C to paused-channels;
+				now multiplay state of C is true;
 		if P is N and N is not 0:
 			if P is 1:
 				say ", but it was paused";
