@@ -365,6 +365,9 @@ To multiplay sound:
 		say "There already seems to be an active play multi command. This will be replaced by the new one, as this test unfortunately does not yet support multiple simultaneous play multi commands.";
 	let N be 0;
 	let P be 0;
+	let aiffs be 0;
+	let oggs be 0;
+	let mods be 0;
 	let L be a list of sound channels;
 	let paused-channels be a list of sound channels;
 	repeat with C running through sound channels:
@@ -372,6 +375,15 @@ To multiplay sound:
 			add C to L;
 			add channel C at index N of the multisound channel list;
 			increment N;
+			if the channel-sound of C is the sound of AIFF:
+				increment aiffs;
+			otherwise:
+				if the channel-sound of C is the sound of OGG:
+					increment oggs;
+				otherwise:
+					increment mods;
+	if aiffs > 1 or oggs > 1 or mods > 1:
+		say "[bracket]Several problems may occur when playing a multi command with the same sound resource on more than one channel. In particular, pausing one of these channels is likely to confuse this testing environment. [if mods > 1]Also, some interpreters are unable to play more than one MOD simultaneously. [end if]You have been warned.[close bracket][line break]";
 	if N is greater than 0:
 		let R be multiplay result with N channels and notify (multinotification);
 		say "Tried to simultaneously start playback on [regarding the number of entries in L]channel[s] [L].";
