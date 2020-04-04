@@ -138,7 +138,7 @@ Understand "play/-- multi" as the multiplay button.
 Instead of pushing the multiplay button:
 	try multiplaying.
 
-The pause button is scenery in Sound Stage. The description is "This button will pause playback of the current channel."
+The pause button is scenery in Sound Stage. The description is "This button will pause the current channel.  Any new sounds started on a paused channel will be immediately paused."
 
 Instead of pushing the pause button:
 	try pausing.
