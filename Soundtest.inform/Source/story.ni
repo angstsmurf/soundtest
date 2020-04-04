@@ -753,7 +753,11 @@ When play begins:
 	now the channel-sound of BGC is sound of OGG;
 	[say "Set channel 2 to background channel, id [background channel id] and rock [rock of channel id (background channel id)].";]
 	recover sound channels;
-	restore channel states.
+	restore channel states;
+	let C be the number of not uncreated sound channels;
+	now C is C - 2;
+	if C is greater than 0:
+		say "[bracket]Recovered [C in words] sound channel[s] from a previous run.[close bracket][line break]"
 
 To check for unsupported features:
 	unless glulx sound is supported:
