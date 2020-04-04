@@ -721,7 +721,7 @@ To handle multichannel (C - a sound channel) stopped:
 				say "[bracket]Something went wrong. The multiplay channels remaining counter is [multiplay channels remaining], but channel [X] still claims to be part of a play multi command[close bracket][line break]";
 				now multiplay state of X is false;
 				now X is stopped;
-	say "[bracket]A[unless glk event value 1 is the resource id of sound of MOD]n[end if] [name of resource (glk event value 1)] on channel [C], which was part of a play multi command, stopped. [if multiplay channels remaining is greater than 0]There [regarding multiplay channels remaining][are] [multiplay channels remaining] channel[s] still playing as part of this command[otherwise]That was the last channel, the play multi command is concluded[end if].[close bracket][line break]>".
+	say "[bracket]A[unless channel-sound of C is the sound of MOD]n[end if] [sound-type-name of channel-sound of C] on channel [C], which was part of a play multi command, stopped. [if multiplay channels remaining is greater than 0]There [regarding multiplay channels remaining][are] [multiplay channels remaining] channel[s] still playing as part of this command[otherwise]That was the last channel, the play multi command is concluded[end if].[close bracket][line break]>".
 
 
 Volume 7 - Intialization
