@@ -365,6 +365,7 @@ To multiplay sound:
 		say "There already seems to be an active play multi command. This will be replaced by the new one, as this test unfortunately does not yet support multiple simultaneous play multi commands.";
 	let N be 0;
 	let P be 0;
+	let error-message be "";
 	let aiffs be 0;
 	let oggs be 0;
 	let mods be 0;
@@ -386,13 +387,30 @@ To multiplay sound:
 		say "[bracket]Several problems may occur when playing a multi command with the same sound resource on more than one channel. In particular, pausing one of these channels is likely to confuse this testing environment. [if mods > 1]Also, some interpreters are unable to play more than one MOD simultaneously. [end if]You have been warned.[close bracket][line break]";
 	if N is greater than 0:
 		let R be multiplay result with N channels and notify (multinotification);
-		say "Tried to simultaneously start playback on [regarding the number of entries in L]channel[s] [L].";
+		say "Tried to simultaneously start playback on [regarding N]channel[s] [L].";
 		now multiplay channels remaining is R;
 		say "Successfully started [R] channel[s]";
 		if R is greater than 0:
-			repeat with index running from 1 to R:
-				[This is not entirely accurate, as the channels that did not start playing are not necessarily last in the list, but it is the most common case and still better than nothing]
-				let C be entry index of L;
+			let final list be a list of sound channels;
+			if R < N:
+				let in-words be "[N - R in words]";
+				let error-message-start be "[bracket][in-words in sentence case] channel[s] did not start playing. ";
+				if N - R is mods - 1:
+					 now error-message is "[error-message-start]I'm going to guess that this is due to more than one MOD in the attempted multiplay command.[close bracket][line break]";
+					let first-mod-found be false;
+					repeat with C running through L:
+						if channel-sound of C is the sound of MOD:
+							if first-mod-found is false:
+								now first-mod-found is true;
+								add C to final list;
+						otherwise:
+							add C to final list;
+				otherwise:
+					now error-message is "[error-message-start]I have no idea why or which channel[s] did not start playing, so I'm just going to trim [(N - R) in words] channel[s] from the end of the list.[close bracket][line break]";
+					repeat with index running from 1 to R:
+						add entry index of L to final list;
+				now L is final list;
+			repeat with C running through L:
 				unless C is paused:
 					now C is playing;
 				otherwise:
@@ -410,7 +428,9 @@ To multiplay sound:
 					say ", but one of them ([paused-channels]) was paused";
 				otherwise:
 					say ", but [paused-channels] were paused";
-		say "."
+		say ".";
+	if error-message is not "":
+		say error-message.
 
 [The global variables below are used to keep track of channels included in a glk_schannel_play_multi() command.]
 
