@@ -386,7 +386,10 @@ To multiplay sound:
 		say "[bracket]Several problems may occur when playing a multi command with the same sound resource on more than one channel. In particular, pausing one of these channels is likely to confuse this testing environment. [if mods > 1]Also, some interpreters are unable to play more than one MOD simultaneously. [end if]You have been warned.[close bracket][line break]";
 	if N is greater than 0:
 		let R be multiplay result with N channels and notify (multinotification);
-		say "Tried to simultaneously start playback on [regarding N]channel[s] [L].";
+		if N is 1:
+			say "Only one channel remains, so it won't be much of a multiple sound command.";
+		otherwise:
+			say "Tried to simultaneously start playback on channels [L].";
 		now multiplay channels remaining is R;
 		say "Successfully started [R] channel[s]";
 		if R is greater than 0:
