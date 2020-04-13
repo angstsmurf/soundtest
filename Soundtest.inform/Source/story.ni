@@ -217,6 +217,9 @@ Understand "play" as playing. Playing is an action applying to nothing. Carry ou
 			handle multichannel (current sound channel) stopped;
 			now multiplay state of current sound channel is false;
 		now the current sound channel is playing;
+		if repeats of current sound channel is 0:
+			say "As the number of repeats was 0, the sound is not actually played.";
+			now the current sound channel is stopped.
 
 Understand "play simple" or "simple-play" or "simple" as simple-playing. Simple-playing is an action applying to nothing. Carry out simple-playing:
 	say "You push the play simple button. [run paragraph on]";
