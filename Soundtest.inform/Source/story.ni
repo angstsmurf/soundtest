@@ -544,6 +544,9 @@ Understand "set [something] to [number]" as number-setting it to. Number-setting
 			now the notification of current sound channel is the number understood;
 	say "You set [the noun] to [the number understood]."
 
+After number-setting the volume slider to a number when the number understood is greater than 65536 for the first time:
+	say "[bracket]Although it is logically impossible to set the volume slider above its maximum value, it is allowed, if not recommended, by the Glk specification, so we allow it here as well.[close bracket][line break]".
+
 The number-setting it to action has a sound channel called the previous channel.
 
 Setting action variables for number-setting:
