@@ -519,7 +519,7 @@ Understand "set [something] to [number]" as number-setting it to. Number-setting
 				stop the action;
 			unless glk sound volume is supported:
 				say "[bracket]This interpreter claims to not support setting sound volume, but we'll try anyway[close bracket][line break]";
-			if the number understood is less than 0 or the number understood is greater than 65536:
+			if the number understood is less than 0:
 				say "The volume slider is numbered from 0 to 65536.";
 				stop the action;
 			now the volume of current sound channel is the number understood;
