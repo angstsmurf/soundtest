@@ -48,7 +48,7 @@ A sound channel has a number called the volume. The volume of a sound channel is
 
 A sound channel has a number called repeats. The repeats of a sound channel is usually 1.
 
-A sound channel has a number called volume change delay. The volume change delay of a sound channel is usually 0.
+A sound channel has a number called volume-change-delay. The volume-change-delay of a sound channel is usually 0.
 
 A sound channel has a number called notification. The notification of a sound channel is usually 1.
 
@@ -106,7 +106,7 @@ The volume slider is scenery in Sound Stage. The description is "A slide control
 
 Understand "volume control/level" as the volume slider.
 
-The fade delay slider is scenery in Sound Stage. The description is "A slide control with which to adjust the duration (in milliseconds) of a volume change. It is currently set to [volume change delay of current sound channel]."
+The fade delay slider is scenery in Sound Stage. The description is "A slide control with which to adjust the duration (in milliseconds) of a volume change. It is currently set to [volume-change-delay of current sound channel]."
 
 Understand "fade/fader delay/-- slider/control/--"  or "volume change/-- delay" as the fade delay slider.
 
@@ -524,7 +524,7 @@ Understand "set [something] to [number]" as number-setting it to. Number-setting
 				stop the action;
 			now the volume of current sound channel is the number understood;
 			if the simplify button is in location:
-				volume-adjust to the number understood with a duration of (volume change delay of the current sound channel) and notification (notification of the current sound channel);
+				volume-adjust to the number understood with a duration of (volume-change-delay of the current sound channel) and notification (notification of the current sound channel);
 			otherwise:
 				volume-adjust to the number understood;
 		-- the repeats knob:
@@ -533,10 +533,10 @@ Understand "set [something] to [number]" as number-setting it to. Number-setting
 				stop the action;
 			now the repeats of current sound channel is the number understood;
 		-- the fade delay slider:
-			if the volume change delay of current sound channel is the number understood:
+			if the volume-change-delay of current sound channel is the number understood:
 				say "[The noun] is already set to [the number understood].";
 				stop the action;
-			now the volume change delay of current sound channel is the number understood;
+			now the volume-change-delay of current sound channel is the number understood;
 		--  the notification switch:
 			if the notification of current sound channel is the number understood:
 				say "[The noun] is already set to [the number understood].";
@@ -557,8 +557,8 @@ After number-setting the channel knob to a number:
 		say "The volume setting slides from [the volume of the previous channel] to [the volume of the current sound channel].";
 	if the repeats of current sound channel is not the repeats of the previous channel:
 		say "The repeats knob turns from [the repeats of the previous channel] to [the repeats of the current sound channel].";
-	if the volume change delay of current sound channel is not the volume change delay of the previous channel:
-		say "The fade delay slides from [the volume change delay of the previous channel] to [the volume change delay of the current sound channel].";
+	if the volume-change-delay of current sound channel is not the volume-change-delay of the previous channel:
+		say "The fade delay slides from [the volume-change-delay of the previous channel] to [the volume-change-delay of the current sound channel].";
 	if the channel-sound of current sound channel is not the channel-sound of the previous channel:
 		say "The sound type setting switches from [sound-type-name of channel-sound of the previous channel] to [sound-type-name of channel-sound of current sound channel].";
 
@@ -622,7 +622,7 @@ Understand "loop forever/--" or "repeat forever/--" as vaguely looping. Vaguely 
 	try playing instead.
 
 Understand "fade to/-- [number]" as volume-fading to. Volume-fading to is an action applying to one number. Carry out volume-fading to:
-	if the volume change delay of the current sound channel is 0:
+	if the volume-change-delay of the current sound channel is 0:
 		try number-setting the fade delay slider to 2000;
 	try number-setting volume to the number understood;
 
@@ -1985,7 +1985,6 @@ A command-showing rule (this is the new print text to the input prompt rule):
 The new print text to the input prompt rule is listed instead of the print text to the input prompt rule in the command-showing rules.
 
 Include (-
-
 [ VM_KeyChar win nostat done res ix jx ch;
 	jx = ch; ! squash compiler warnings
 	if (win == 0) win = gg_mainwin;
@@ -2068,8 +2067,10 @@ Include (-
   .KCPContinue;
 	return res;
 ];
+-) replacing "VM_KeyChar".
 
-[ VM_KeyDelay tenths  key done ix;
+Include (-
+[VM_KeyDelay tenths  key done ix;
 	glk_request_char_event(gg_mainwin);
 	glk_request_timer_events(tenths*100);
 	while (~~done) {
@@ -2088,7 +2089,9 @@ Include (-
 	glk_request_timer_events(0);
 	return key;
 ];
+-) replacing "VM_KeyDelay"..
 
+Include (-
 [ VM_ReadKeyboard  a_buffer a_table done ix;
 	if (gg_commandstr ~= 0 && gg_command_reading ~= false) {
 		done = glk_get_line_stream(gg_commandstr, a_buffer+WORDSIZE,
@@ -2160,4 +2163,4 @@ Include (-
 	#endif; ! ECHO_COMMANDS
 ];
 
--) instead of "Keyboard Input" in "Glulx.i6t".
+-) replacing "VM_ReadKeyboard".
